@@ -1,0 +1,10 @@
+training*/
+data.zip
+run1*
+
+.ipynb_checkpoints
+models
+*.swp
+*.p
+traffic-signs-data
+
