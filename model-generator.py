@@ -3,9 +3,15 @@ import csv
 from keras.models import Sequential
 from keras.layers.core  import Flatten, Dense, Lambda
 from keras.layers import Conv2D, MaxPooling2D
+from keras.layers import Cropping2D
+import cv2
+import numpy as np
+import sklearn
 
+traintag = 'train-4'
+csvfilename = './' + traintag + '/driving_log.csv'
 samples = []
-with open('training-3/driving_log.csv') as csvfile:
+with open(csvfilename) as csvfile:
     reader = csv.reader(csvfile)
     for line in reader:
         samples.append(line)
@@ -13,9 +19,6 @@ with open('training-3/driving_log.csv') as csvfile:
 from sklearn.model_selection import train_test_split
 train_samples, validation_samples = train_test_split(samples, test_size=0.2)
 
-import cv2
-import numpy as np
-import sklearn
 
 bsize = 32
 def generator(samples, batch_size=32):
@@ -29,8 +32,8 @@ def generator(samples, batch_size=32):
             angles = []
             for batch_sample in batch_samples:
                 # name on  ubuntu
-                name = './IMG/' + batch_sample[0].split('\\')[-1]
-#                name = batch_sample[0]
+                name = './' + traintag + '/IMG/' + batch_sample[0].split('\\')[-1]
+#                name = './train-4/IMG/' + batch_sample[0].split('\\')[-1]
 #                print(name)
                 center_image = cv2.imread(name)
                 center_angle = float(batch_sample[3])
@@ -63,8 +66,18 @@ validation_generator = generator(validation_samples, batch_size = 32)
 #ch, row, col = 3, 80, 320  # Trimmed image format
 ch, row, col = 3, 160, 320  # Trimmed image format
 
-
 model = Sequential()
+# cropping
+model.add(Cropping2D(cropping=((50, 20), (0,0)), input_shape=(160,320,3)))
+'''
+model.add(Cropping2D(cropping=((50,20), (0,0)), input_shape=(160,320,3)))
+# The example above crops:
+50 rows pixels from the top of the image
+20 rows pixels from the bottom of the image
+0 columns of pixels from the left of the image
+0 columns of pixels from the right of the image
+'''
+
 # Preprocess incoming data, centered around zero with small standard deviation 
 '''
 model.add(Lambda(lambda x: x/127.5 - 1.,
@@ -109,10 +122,4 @@ model.fit_generator(train_generator,
                     validation_data = validation_generator,
                     validation_steps = len(validation_samples) , epochs = 5)
 
-'''
-model.fit_generator(train_generator,
-                    steps_per_epoch = len(train_samples) / 32, 
-                    validation_data = validation_generator,
-                    validation_steps = len(validation_samples) / 32, epochs = 5)
-'''
 model.save('model.h5')
