@@ -8,7 +8,7 @@ import cv2
 import numpy as np
 import sklearn
 
-traintag = 'train-4'
+traintag = 'train-4-few'
 csvfilename = './' + traintag + '/driving_log.csv'
 samples = []
 with open(csvfilename) as csvfile:
@@ -40,9 +40,15 @@ def generator(samples, batch_size=32):
                 if center_image == None:
                     print("Invalid image path:", name)
                 else:
-                    images.append(center_image)
                     angle = float(center_angle)
-                    angles.append(angle)
+                    # avoid "going straight" bias. So I totally dropped all angle 0 data!
+                    if 0.0 != angle:
+                        images.append(center_image)
+                        angles.append(angle)
+                    else:
+                        #print("skipped angle 0!")
+                        pass
+
 
             # trim image to only see section with road
             X_train = np.array(images)
@@ -68,7 +74,7 @@ ch, row, col = 3, 160, 320  # Trimmed image format
 
 model = Sequential()
 # cropping
-model.add(Cropping2D(cropping=((50, 20), (0,0)), input_shape=(160,320,3)))
+model.add(Cropping2D(cropping=((80, 0), (80,80)), input_shape=(160,320,3)))
 '''
 model.add(Cropping2D(cropping=((50,20), (0,0)), input_shape=(160,320,3)))
 # The example above crops:
@@ -88,15 +94,15 @@ model.add(Lambda(lambda x: x/127.5 - 1.,
 #model.add(Lambda(lambda x:x / 255.0 - 0.5, input_shape = (160, 320, 3) ) )
 model.add(Lambda(lambda x:x / 255.0 - 0.5, input_shape = (160, 320, 3) ) )
 
-model.add( Conv2D(4, (5, 5), 
+model.add( Conv2D(32, (5, 5), 
     padding = 'same',
     activation="relu") )
-model.add( Conv2D(4, (5, 5), 
+model.add( Conv2D(32, (5, 5), 
     padding = 'same',
     activation="relu") )
 model.add(Flatten() )
-model.add(Dense(12) )
-#model.add(Dense(8) )
+model.add(Dense(16) )
+model.add(Dense(8) )
 model.add(Dense(1) )
 
 model.compile(loss='mse', optimizer='adam')
