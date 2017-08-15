@@ -1,6 +1,7 @@
 training*/
 data.zip
 run1*
+data/
 
 .ipynb_checkpoints
 models
