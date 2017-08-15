@@ -8,7 +8,8 @@ import cv2
 import numpy as np
 import sklearn
 
-traintag = 'train-4-few'
+#traintag = 'train-4-few'
+traintag = 'udacity-data/'
 csvfilename = './' + traintag + '/driving_log.csv'
 samples = []
 with open(csvfilename) as csvfile:
@@ -32,7 +33,9 @@ def generator(samples, batch_size=32):
             angles = []
             for batch_sample in batch_samples:
                 # name on  ubuntu
-                name = './' + traintag + '/IMG/' + batch_sample[0].split('\\')[-1]
+                name = './' + traintag + batch_sample[0].strip().split('\\')[-1]
+                name = './' + traintag + batch_sample[1].strip().split('\\')[-1]
+                name = './' + traintag + batch_sample[2].strip().split('\\')[-1]
 #                name = './train-4/IMG/' + batch_sample[0].split('\\')[-1]
 #                print(name)
                 center_image = cv2.imread(name)
