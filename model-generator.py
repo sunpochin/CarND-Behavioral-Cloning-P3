@@ -33,15 +33,19 @@ def generator(samples, batch_size=32):
             angles = []
             for batch_sample in batch_samples:
                 # name on  ubuntu
-                name = './' + traintag + batch_sample[0].strip().split('\\')[-1]
-                name = './' + traintag + batch_sample[1].strip().split('\\')[-1]
-                name = './' + traintag + batch_sample[2].strip().split('\\')[-1]
+                center_name = './' + traintag + batch_sample[0].strip().split('\\')[-1]
 #                name = './train-4/IMG/' + batch_sample[0].split('\\')[-1]
 #                print(name)
-                center_image = cv2.imread(name)
+                center_image = cv2.imread(center_name)
                 center_angle = float(batch_sample[3])
+
+                # create adjusted steering measurements for the side camera images
+                correction = 0.2 # this is a parameter to tune
+                steering_left = center_angle + correction
+                steering_right = center_angle - correction
+
                 if center_image == None:
-                    print("Invalid image path:", name)
+                    print("Invalid image path:", center_name)
                 else:
                     angle = float(center_angle)
                     # avoid "going straight" bias. So I totally dropped all angle 0 data!
@@ -52,6 +56,19 @@ def generator(samples, batch_size=32):
                         #print("skipped angle 0!")
                         pass
 
+                left_name = './' + traintag + batch_sample[1].strip().split('\\')[-1]
+                left_image = cv2.imread(left_name)
+                left_angle = float(batch_sample[3])
+                angle = float(left_angle)
+                images.append(left_image)
+                angles.append(angle)
+
+                right_name = './' + traintag + batch_sample[2].strip().split('\\')[-1]
+                right_image = cv2.imread(right_name)
+                right_angle = float(right_sample[3])
+                angle = float(right_angle)
+                images.append(right_image)
+                angles.append(angle)
 
             # trim image to only see section with road
             X_train = np.array(images)
