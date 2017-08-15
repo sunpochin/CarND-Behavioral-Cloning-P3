@@ -28,8 +28,9 @@ def generator(samples, batch_size=32):
             images = []
             angles = []
             for batch_sample in batch_samples:
-#                name = './IMG/'+batch_sample[0].split('/')[-1]
-                name = batch_sample[0]
+                # name on  ubuntu
+                name = './IMG/' + batch_sample[0].split('\\')[-1]
+#                name = batch_sample[0]
 #                print(name)
                 center_image = cv2.imread(name)
                 center_angle = float(batch_sample[3])
@@ -45,7 +46,7 @@ def generator(samples, batch_size=32):
             y_train = np.array(angles)
 #            print('X_train.shape:', X_train.shape)
 #            print('y_train.shape:', y_train.shape)
-            print('y_train:', y_train)
+#            print('y_train:', y_train)
             some = sklearn.utils.shuffle(X_train, y_train)
 #            print('some: ', some)
             yield some
@@ -81,8 +82,8 @@ model.add( Conv2D(4, (5, 5),
     padding = 'same',
     activation="relu") )
 model.add(Flatten() )
-model.add(Dense(120) )
-model.add(Dense(84) )
+model.add(Dense(12) )
+#model.add(Dense(8) )
 model.add(Dense(1) )
 
 model.compile(loss='mse', optimizer='adam')
