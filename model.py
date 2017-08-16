@@ -156,24 +156,25 @@ def preprocess(image):
 #model.add(Lambda(lambda x: cv2.resize(x, (new_height, new_width) ), 
 #    input_shape=(row, col, ch), output_shape=(new_height, new_width, ch) ) )
 
-# nvidia net https://devblogs.nvidia.com/parallelforall/deep-learning-self-driving-cars/
-#"first three convolutional layers with a 2×2 stride and a 5×5 kernel, 
-#and a non-strided convolution with a 3×3 kernel size in the final two convolutional layers"
 model.add( Conv2D(24, (5, 5), strides = (2, 2),
     padding = 'same', activation="relu") )
+'''
 model.add( Conv2D(36, (5, 5), strides = (2, 2),
-    padding = 'same', activation="relu") )
+    padding = 'same',
+    activation="relu") )
 model.add( Conv2D(48, (5, 5), strides = (2, 2),
     padding = 'same', activation="relu") )
-model.add( Conv2D(64, (3, 3), strides = (1, 2), 
+model.add( Conv2D(64, (3, 3), strides = (2, 2), 
     padding = 'same', activation="relu") )
-model.add( Conv2D(64, (3, 3), strides = (1, 2),
+model.add( Conv2D(64, (3, 3), strides = (2, 2),
     padding = 'same', activation="relu") )
-
+'''
 model.add(Flatten() )
-model.add(Dense(1164) )
+####model.add(Dense(1164) )
+'''
 model.add(Dense(100) )
 model.add(Dense(50) )
+'''
 model.add(Dense(10) )
 model.add(Dense(1) )
 model.compile(loss='mse', optimizer='adam')
@@ -188,8 +189,8 @@ for i in range(32):
 print('len(train_samples): ', len(train_samples) )
 # use sample_rate and epoch for quicker test. 
 # If I want to test something quick but rough, set a HIGHER sample_rate to reduce training
-sample_rate = 1
-epoch = 5
+sample_rate = 32
+epoch = 1
 model.fit_generator(train_generator,
                     steps_per_epoch = len(train_samples) / sample_rate, 
                     validation_data = validation_generator,
