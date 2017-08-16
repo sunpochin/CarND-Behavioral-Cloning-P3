@@ -21,6 +21,7 @@ with open(csvfilename) as csvfile:
 from sklearn.model_selection import train_test_split
 train_samples, validation_samples = train_test_split(samples, test_size=0.2)
 
+'''
 # create adjusted steering measurements for the side camera images
 correction = 0.3 # this is a parameter to tune
 steering_left = center_angle + correction
@@ -45,7 +46,7 @@ def read_image(name, angle, dir):
         return 4
     else:
         return 5
-
+'''
 
 
 bsize = 32
@@ -77,7 +78,7 @@ def generator(samples, batch_size=32):
                 if 0.0 == angle:
                     continue
 
-                if center_image == None:
+                if center_image.any() == None:
                     print("Invalid image path:", center_name)
                     continue
                 else:
@@ -92,7 +93,7 @@ def generator(samples, batch_size=32):
                         
                 left_name = './' + traintag + batch_sample[1].strip().split('\\')[-1]
                 left_image = cv2.imread(left_name)
-                if left_image == None:
+                if left_image.any() == None:
                     print("Invalid image path:", left_name)
                     continue                
                 left_angle = steering_left
@@ -102,7 +103,7 @@ def generator(samples, batch_size=32):
 
                 right_name = './' + traintag + batch_sample[2].strip().split('\\')[-1]
                 right_image = cv2.imread(right_name)
-                if right_image == None:
+                if right_image.any() == None:
                     print("Invalid image path:", right_name)
                     continue
                 right_angle = steering_right
