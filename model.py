@@ -156,21 +156,20 @@ def preprocess(image):
 #model.add(Lambda(lambda x: cv2.resize(x, (new_height, new_width) ), 
 #    input_shape=(row, col, ch), output_shape=(new_height, new_width, ch) ) )
 
-model.add( Conv2D(24, (5, 5), 
-    padding = 'same',
-    activation="relu") )
-model.add( Conv2D(36, (5, 5), 
-    padding = 'same',
-    activation="relu") )
-model.add( Conv2D(48, (5, 5), 
-    padding = 'same',
-    activation="relu") )
-model.add( Conv2D(64, (3, 3), 
-    padding = 'same',
-    activation="relu") )
-model.add( Conv2D(64, (3, 3), 
-    padding = 'same',
-    activation="relu") )
+# nvidia net https://devblogs.nvidia.com/parallelforall/deep-learning-self-driving-cars/
+#"first three convolutional layers with a 2×2 stride and a 5×5 kernel, 
+#and a non-strided convolution with a 3×3 kernel size in the final two convolutional layers"
+model.add( Conv2D(24, (5, 5), strides = (2, 2),
+    padding = 'same', activation="relu") )
+model.add( Conv2D(36, (5, 5), strides = (2, 2),
+    padding = 'same', activation="relu") )
+model.add( Conv2D(48, (5, 5), strides = (2, 2),
+    padding = 'same', activation="relu") )
+model.add( Conv2D(64, (3, 3), strides = (1, 2), 
+    padding = 'same', activation="relu") )
+model.add( Conv2D(64, (3, 3), strides = (1, 2),
+    padding = 'same', activation="relu") )
+
 model.add(Flatten() )
 model.add(Dense(1164) )
 model.add(Dense(100) )
