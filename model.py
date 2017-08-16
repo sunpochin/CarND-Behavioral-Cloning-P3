@@ -53,6 +53,16 @@ def read_image(name, angle, dir):
 
     return image, angle
 
+def decide_flip_image(image, angle):
+    # https://discussions.udacity.com/t/using-generator-to-implement-random-augmentations/242185/7
+    # decide whether to horizontally flip the image:
+    flip_prob = np.random.random()
+    if flip_prob > 0.5:
+    # flip the image and reverse the steering angle
+        angle = -1 * angle
+        image = cv2.flip(image, 1)
+
+    return image, angle
 
 
 bsize = 32
@@ -78,6 +88,7 @@ def generator(samples, batch_size=32):
                 if (angle == 4):
 #                    print("None center image!")
                     continue
+                image, angle = decide_flip_image(image, angle)
                 images.append(image)
                 angles.append(angle)
 
@@ -87,6 +98,7 @@ def generator(samples, batch_size=32):
                 if (angle == 4):
 #                    print("None leftenum image!")
                     continue
+                image, angle = decide_flip_image(image, angle)
                 images.append(image)
                 angles.append(angle)
 
@@ -96,11 +108,23 @@ def generator(samples, batch_size=32):
                 if (angle == 4):
 #                    print("None rightenum image!")
                     continue
+                image, angle = decide_flip_image(image, angle)
                 images.append(image)
                 angles.append(angle)
 
+            '''
+            # data augmentation, flip it to make 2x. 
+            # adding this trying to fix the issue of my car always going to "the yellow dirt lane".
+            augmented_images, augmented_angles = [], []
+            for image, angle in zip(images, angles):
+                augmented_images.append(image)
+                augmented_angles.append(angle) 
+                augmented_images.append(cv2.flip(image, 1) )
+                augmented_angles.append(angle * -1.0)
+            images = augmented_images
+            angle = augmented_angles
+            '''
 
-            # trim image to only see section with road
             X_train = np.array(images)
             y_train = np.array(angles)
 #            print('X_train.shape:', X_train.shape)
@@ -123,21 +147,23 @@ validation_generator = generator(validation_samples, batch_size = 32)
 ch, row, col = 3, 160, 320  # Trimmed image format
 
 model = Sequential()
+# trim image to only see section with road
 
-# resize: https://discussions.udacity.com/t/keras-lambda-to-resize-seems-causing-the-problem/316247/3?u=sunpochin
 # cropping
 model.add(Cropping2D(cropping=((50, 30), (0, 0)), input_shape=(160,320,3)))
 # The example above crops: 50 rows pixels from the top of the image 
 #30 rows pixels from the bottom of the image
 #0 columns of pixels from the left of the image 0 columns of pixels from the right of the image
+
+# resize: https://discussions.udacity.com/t/keras-lambda-to-resize-seems-causing-the-problem/316247/3?u=sunpochin
 def resize_img(input):
     # ktf must be declared here to 'be stored in the model' and 'let drive.py use it'
     new_width = 32
     new_height = 32
     from keras.backend import tf as ktf
     return ktf.image.resize_images(input, (new_width, new_height))
-
 # resize: https://discussions.udacity.com/t/keras-lambda-to-resize-seems-causing-the-problem/316247/3?u=sunpochin
+
 model.add(Lambda(resize_img))
 model.add(Lambda(lambda x:x / 255.0 - 0.5, input_shape = (row, col, ch) ) )
 
