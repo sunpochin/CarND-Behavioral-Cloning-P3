@@ -136,6 +136,13 @@ ch, row, col = 3, 160, 320  # Trimmed image format
 model = Sequential()
 # cropping
 model.add(Cropping2D(cropping=((50, 30), (0, 0)), input_shape=(160,320,3)))
+def resize_img(input):
+    from keras.backend import tf as ktf
+    return ktf.image.resize_images(input, (32, 32))
+
+#... in the model ...
+model.add(Lambda(resize_img))
+
 #model.add(Cropping2D(cropping=((80, 20), (130,130)), input_shape=(160,320,3)))
 '''
 model.add(Cropping2D(cropping=((50,20), (0,0)), input_shape=(160,320,3)))
@@ -170,15 +177,15 @@ def preprocess(image):
 #model.add(Lambda(lambda x: cv2.resize(x, (new_height, new_width) ), 
 #    input_shape=(row, col, ch), output_shape=(new_height, new_width, ch) ) )
 
-model.add( Conv2D(6, (5, 5), 
+model.add( Conv2D(1, (5, 5), 
     padding = 'same',
     activation="relu") )
-model.add( Conv2D(6, (5, 5), 
+model.add( Conv2D(1, (5, 5), 
     padding = 'same',
     activation="relu") )
 model.add(Flatten() )
 #model.add(Dense(1164) )
-model.add(Dense(100) )
+model.add(Dense(10) )
 model.add(Dense(1) )
 model.compile(loss='mse', optimizer='adam')
 
@@ -190,8 +197,8 @@ for i in range(32):
 #print('train_generator', train_generator)
 
 print('len(train_samples): ', len(train_samples) )
-sample_rate = 16
-epoch = 5
+sample_rate = 64
+epoch = 2
 model.fit_generator(train_generator,
                     steps_per_epoch = len(train_samples) / sample_rate, 
                     validation_data = validation_generator,
