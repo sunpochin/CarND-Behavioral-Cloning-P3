@@ -26,9 +26,9 @@ train_samples, validation_samples = train_test_split(samples, test_size=0.2)
 correction = 0.3 # this is a parameter to tune
 #steering_left = center_angle + correction
 #steering_right = center_angle - correction
+centerenum = 0
 leftenum = 1
-centerenum = 2
-rightenum = 3
+rightenum = 2
 def read_image(name, angle, dir):
     image = cv2.imread(name)
 #    center_angle = float(batch_sample[3])
@@ -70,13 +70,8 @@ def generator(samples, batch_size=32):
                 if batch_sample[3] == 'steering':
                     continue
                 center_angle = float(batch_sample[3] )
-                # create adjusted steering measurements for the side camera images
-                correction = 0.3 # this is a parameter to tune
-                steering_left = center_angle + correction
-                steering_right = center_angle - correction
 
-
-                center_name = './' + traintag + batch_sample[0].strip().split('\\')[-1]
+                center_name = './' + traintag + batch_sample[centerenum].strip().split('\\')[-1]
 #                name = './train-4/IMG/' + batch_sample[0].split('\\')[-1]
 #                print(name)
                 image, angle = read_image(center_name, center_angle, centerenum)
@@ -86,48 +81,24 @@ def generator(samples, batch_size=32):
                 images.append(image)
                 angles.append(angle)
 
-                '''
-                center_image = cv2.imread(center_name)
-                center_angle = float(batch_sample[3])
-
-                
-                angle = float(center_angle)
-                if 0.0 == angle:
+                # left image
+                name = './' + traintag + batch_sample[leftenum].strip().split('\\')[-1]
+                image, angle = read_image(name, center_angle, leftenum)
+                if (angle == 4):
+#                    print("None leftenum image!")
                     continue
-
-                if center_image.any() == None:
-                    print("Invalid image path:", center_name)
-                    continue
-                else:
-                    angle = float(center_angle)
-                    # avoid "going straight" bias. So I totally dropped all angle 0 data!
-                    if 0.0 != angle:
-                        images.append(center_image)
-                        angles.append(angle)
-                    else:
-                        #print("skipped angle 0!")
-                        continue
-                '''
-                        
-                left_name = './' + traintag + batch_sample[1].strip().split('\\')[-1]
-                left_image = cv2.imread(left_name)
-                if left_image.any() == None:
-                    print("Invalid image path:", left_name)
-                    continue                
-                left_angle = steering_left
-                angle = float(left_angle)
-                images.append(left_image)
+                images.append(image)
                 angles.append(angle)
 
-                right_name = './' + traintag + batch_sample[2].strip().split('\\')[-1]
-                right_image = cv2.imread(right_name)
-                if right_image.any() == None:
-                    print("Invalid image path:", right_name)
+                # right image
+                name = './' + traintag + batch_sample[rightenum].strip().split('\\')[-1]
+                image, angle = read_image(name, center_angle, rightenum)
+                if (angle == 4):
+#                    print("None rightenum image!")
                     continue
-                right_angle = steering_right
-                angle = float(right_angle)
-                images.append(right_image)
+                images.append(image)
                 angles.append(angle)
+
 
             # trim image to only see section with road
             X_train = np.array(images)
@@ -226,6 +197,6 @@ model.fit_generator(train_generator,
 
 model.save('model.h5')
 
-from keras.utils.visualize_util import plot
-plot(model, to_file='model.png')
+#from keras.utils.visualize_util import plot
+#plot(model, to_file='model.png')
 
