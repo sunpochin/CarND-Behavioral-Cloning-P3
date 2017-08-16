@@ -31,7 +31,6 @@ leftenum = 1
 rightenum = 2
 def read_image(name, angle, dir):
     image = cv2.imread(name)
-#    center_angle = float(batch_sample[3])
     center_angle = angle
     if leftenum == dir: # left
         angle = center_angle + correction
@@ -53,9 +52,9 @@ def read_image(name, angle, dir):
 
     return image, angle
 
+# decide whether to horizontally flip the image:
 def decide_flip_image(image, angle):
     # https://discussions.udacity.com/t/using-generator-to-implement-random-augmentations/242185/7
-    # decide whether to horizontally flip the image:
     flip_prob = np.random.random()
     if flip_prob > 0.5:
     # flip the image and reverse the steering angle
@@ -66,13 +65,12 @@ def decide_flip_image(image, angle):
 
 
 bsize = 32
-def generator(samples, batch_size=32):
+def generator(samples, batch_size = bsize):
     num_samples = len(samples)
     while 1: # Loop forever so the generator never terminates
         sklearn.utils.shuffle(samples)
         for offset in range(0, num_samples, batch_size):
             batch_samples = samples[offset:offset+batch_size]
-
             images = []
             angles = []
             for batch_sample in batch_samples:
@@ -81,49 +79,16 @@ def generator(samples, batch_size=32):
                     continue
                 center_angle = float(batch_sample[3] )
 
-                center_name = './' + traintag + batch_sample[centerenum].strip().split('\\')[-1]
-#                name = './train-4/IMG/' + batch_sample[0].split('\\')[-1]
-#                print(name)
-                image, angle = read_image(center_name, center_angle, centerenum)
-                if (angle == 4):
-#                    print("None center image!")
-                    continue
-                image, angle = decide_flip_image(image, angle)
-                images.append(image)
-                angles.append(angle)
-
-                # left image
-                name = './' + traintag + batch_sample[leftenum].strip().split('\\')[-1]
-                image, angle = read_image(name, center_angle, leftenum)
-                if (angle == 4):
-#                    print("None leftenum image!")
-                    continue
-                image, angle = decide_flip_image(image, angle)
-                images.append(image)
-                angles.append(angle)
-
-                # right image
-                name = './' + traintag + batch_sample[rightenum].strip().split('\\')[-1]
-                image, angle = read_image(name, center_angle, rightenum)
-                if (angle == 4):
-#                    print("None rightenum image!")
-                    continue
-                image, angle = decide_flip_image(image, angle)
-                images.append(image)
-                angles.append(angle)
-
-            '''
-            # data augmentation, flip it to make 2x. 
-            # adding this trying to fix the issue of my car always going to "the yellow dirt lane".
-            augmented_images, augmented_angles = [], []
-            for image, angle in zip(images, angles):
-                augmented_images.append(image)
-                augmented_angles.append(angle) 
-                augmented_images.append(cv2.flip(image, 1) )
-                augmented_angles.append(angle * -1.0)
-            images = augmented_images
-            angle = augmented_angles
-            '''
+                cameras_dir = [centerenum, leftenum, rightenum]
+                for camera in cameras_dir:
+                    name = './' + traintag + batch_sample[camera].strip().split('\\')[-1]
+                    image, angle = read_image(name, center_angle, camera)
+                    if (angle == 4):
+    #                    print("None image! : ", camera)
+                        continue
+                    image, angle = decide_flip_image(image, angle)
+                    images.append(image)
+                    angles.append(angle)
 
             X_train = np.array(images)
             y_train = np.array(angles)
