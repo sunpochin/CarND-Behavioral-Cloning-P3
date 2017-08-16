@@ -33,6 +33,8 @@ def generator(samples, batch_size=32):
             angles = []
             for batch_sample in batch_samples:
                 # name on  ubuntu
+                if batch_sample[3] == 'steering':
+                    continue
                 center_name = './' + traintag + batch_sample[0].strip().split('\\')[-1]
 #                name = './train-4/IMG/' + batch_sample[0].split('\\')[-1]
 #                print(name)
@@ -43,9 +45,14 @@ def generator(samples, batch_size=32):
                 correction = 0.2 # this is a parameter to tune
                 steering_left = center_angle + correction
                 steering_right = center_angle - correction
+                
+                angle = float(center_angle)
+                if 0.0 == angle:
+                    continue
 
                 if center_image == None:
                     print("Invalid image path:", center_name)
+                    continue
                 else:
                     angle = float(center_angle)
                     # avoid "going straight" bias. So I totally dropped all angle 0 data!
@@ -54,18 +61,24 @@ def generator(samples, batch_size=32):
                         angles.append(angle)
                     else:
                         #print("skipped angle 0!")
-                        pass
-
+                        continue
+                        
                 left_name = './' + traintag + batch_sample[1].strip().split('\\')[-1]
                 left_image = cv2.imread(left_name)
-                left_angle = float(batch_sample[3])
+                if left_image == None:
+                    print("Invalid image path:", left_name)
+                    continue                
+                left_angle = steering_left
                 angle = float(left_angle)
                 images.append(left_image)
                 angles.append(angle)
 
                 right_name = './' + traintag + batch_sample[2].strip().split('\\')[-1]
                 right_image = cv2.imread(right_name)
-                right_angle = float(right_sample[3])
+                if right_image == None:
+                    print("Invalid image path:", right_name)
+                    continue
+                right_angle = steering_right
                 angle = float(right_angle)
                 images.append(right_image)
                 angles.append(angle)
@@ -146,6 +159,6 @@ model.fit_generator(train_generator, samples_per_epoch = len(train_samples),
 model.fit_generator(train_generator,
                     steps_per_epoch = len(train_samples) , 
                     validation_data = validation_generator,
-                    validation_steps = len(validation_samples) , epochs = 5)
+                    validation_steps = len(validation_samples) , epochs = 4)
 
 model.save('model.h5')
