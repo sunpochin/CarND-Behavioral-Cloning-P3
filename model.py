@@ -1,10 +1,11 @@
 import os
 import csv
 from keras.models import Sequential
-from keras.layers.core  import Flatten, Dense, Lambda
+from keras.layers.core import Flatten, Dense, Lambda, Dropout
 from keras.layers import Input, Cropping2D
 from keras.layers import Conv2D, MaxPooling2D
 from keras.models import Model
+
 import cv2
 import numpy as np
 import sklearn
@@ -121,8 +122,8 @@ model.add(Cropping2D(cropping=((50, 30), (0, 0)), input_shape = (row, col, ch) )
 # resize: https://discussions.udacity.com/t/keras-lambda-to-resize-seems-causing-the-problem/316247/3?u=sunpochin
 def resize_img(input):
     # ktf must be declared here to 'be stored in the model' and 'let drive.py use it'
-    new_width = 32
-    new_height = 32
+    new_width = 64
+    new_height = 64
     from keras.backend import tf as ktf
     return ktf.image.resize_images(input, (new_width, new_height))
 # resize: https://discussions.udacity.com/t/keras-lambda-to-resize-seems-causing-the-problem/316247/3?u=sunpochin
@@ -201,18 +202,18 @@ import numpy as np
 # 
 # http://machinelearningmastery.com/display-deep-learning-model-training-history-in-keras/
 # list all data in history
-print(history.history.keys())
+print(loss_history.history.keys())
 # summarize history for accuracy
-plt.plot(history.history['acc'])
-plt.plot(history.history['val_acc'])
+plt.plot(loss_history.history['acc'])
+plt.plot(loss_history.history['val_acc'])
 plt.title('model accuracy')
 plt.ylabel('accuracy')
 plt.xlabel('epoch')
 plt.legend(['train', 'test'], loc='upper left')
 plt.show()
 # summarize history for loss
-plt.plot(history.history['loss'])
-plt.plot(history.history['val_loss'])
+plt.plot(loss_history.history['loss'])
+plt.plot(loss_history.history['val_loss'])
 plt.title('model loss')
 plt.ylabel('loss')
 plt.xlabel('epoch')
