@@ -191,8 +191,8 @@ for i in range(32):
 print('len(train_samples): ', len(train_samples) )
 # use sample_rate and epoch for quicker test. 
 # If I want to test something quick but rough, set a HIGHER sample_rate to reduce training
-sample_rate = 16
-epoch = 3
+sample_rate = 1
+epoch = 5
 model.fit_generator(train_generator,
                     steps_per_epoch = len(train_samples) / sample_rate, 
                     validation_data = validation_generator,
