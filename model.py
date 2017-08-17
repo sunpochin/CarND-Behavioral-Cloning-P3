@@ -205,14 +205,6 @@ import numpy as np
 # list all data in history
 print(loss_history.history.keys())
 import matplotlib.pyplot as plt 
-# summarize history for accuracy
-#plt.plot(loss_history.history['acc'])
-plt.plot(loss_history.history['val_acc'])
-plt.title('model accuracy')
-plt.ylabel('accuracy')
-plt.xlabel('epoch')
-plt.legend(['train', 'test'], loc='upper left')
-plt.show()
 # summarize history for loss
 plt.plot(loss_history.history['loss'])
 plt.plot(loss_history.history['val_loss'])
