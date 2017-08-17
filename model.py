@@ -157,6 +157,11 @@ model.add(Dense(1164) )
 model.add(Dense(100) )
 model.add(Dense(50) )
 '''
+#keras.layers.core.Dropout(rate, noise_shape=None, seed=None)
+model.add(Dense(20) )
+model.add(Dropout(0.5) )
+model.add(Dense(10) )
+model.add(Dropout(0.5) )
 model.add(Dense(10) )
 model.add(Dense(1) )
 from keras import optimizers
@@ -175,10 +180,14 @@ print('len(train_samples): ', len(train_samples) )
 # If I want to test something quick but rough, set a HIGHER sample_rate to reduce training
 sample_rate = 32
 epoch = 5
+from keras.callbacks import CSVLogger
+csv_logger = CSVLogger('log.csv', append=True, separator=';')
+
 loss_history = model.fit_generator(train_generator,
                     steps_per_epoch = len(train_samples) / sample_rate, 
                     validation_data = validation_generator,
-                    validation_steps = len(validation_samples) / sample_rate, epochs = epoch)
+                    validation_steps = len(validation_samples) / sample_rate, epochs = epoch,
+                    callbacks=[csv_logger])
 
 model.save('model.h5')
 
@@ -186,8 +195,8 @@ model.save('model.h5')
 #plot(model, to_file='model.png')
 #https://stackoverflow.com/questions/38445982/how-to-log-keras-loss-output-to-a-file
 import numpy as np
-numpy_loss_history = np.array(loss_history)
-np.savetxt("loss_history.txt", numpy_loss_history, delimiter=",")
+#numpy_loss_history = np.array(loss_history)
+#np.savetxt("loss_history.txt", numpy_loss_history, delimiter=",")
 
 # 
 # http://machinelearningmastery.com/display-deep-learning-model-training-history-in-keras/
