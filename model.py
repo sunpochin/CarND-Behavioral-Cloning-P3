@@ -40,6 +40,7 @@ leftenum = 1
 rightenum = 2
 def read_image(name, angle, dir):
     image = cv2.imread(name)
+    image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
     # TODO: I should here save some images for the writeup
     center_angle = angle
     if leftenum == dir: # left
