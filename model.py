@@ -6,6 +6,7 @@ from keras.layers import Input, Cropping2D
 from keras.layers import Conv2D, MaxPooling2D
 from keras.models import Model
 from keras.callbacks import CSVLogger
+import matplotlib.pyplot as plt 
 
 import cv2
 import numpy as np
@@ -14,7 +15,9 @@ import sklearn
 # use sample_rate and epoch for quicker test. 
 # If I want to test something quick but rough, set a HIGHER sample_rate to reduce training
 bsize = 32
-epoch = 10
+epoch = 15
+down_sample_rate = 1
+#down_sample_rate = 1 * bsize
 
 #traintag = 'train-4-few'
 traintag = 'udacity-data/'
@@ -48,7 +51,7 @@ def read_image(name, angle, dir):
         # https://discussions.udacity.com/t/vehicle-drives-in-circles-in-autonomous-mode-what-could-be-going-wrong/283222/3?u=sunpochin
         if 0 == angle:
             drop_prob = np.random.random()
-            if drop_prob > 0.1:
+            if drop_prob > 0.01:
                 return None, 4
     elif rightenum == dir: # right
         angle = center_angle - correction
@@ -74,13 +77,15 @@ def decide_flip_image(image, angle):
 
     return image, angle
 
-
+# used to fit_generator in batch, avoid out of memory.
 def generator(samples, batch_size = bsize):
     num_samples = len(samples)
+    print('num_samples: ', num_samples)
     while 1: # Loop forever so the generator never terminates
         sklearn.utils.shuffle(samples)
         for offset in range(0, num_samples, batch_size):
-            batch_samples = samples[offset:offset+batch_size]
+            batch_samples = samples[offset : offset + batch_size]
+            # print('offset: ', offset)
             images = []
             angles = []
             for batch_sample in batch_samples:
@@ -111,16 +116,13 @@ def generator(samples, batch_size = bsize):
 
 
 # compile and train the model using the generator function
-train_generator = generator(train_samples, batch_size = 32)
-validation_generator = generator(validation_samples, batch_size = 32)
+train_generator = generator(train_samples, batch_size = bsize)
+validation_generator = generator(validation_samples, batch_size = bsize)
 
-#ch, row, col = 3, 80, 320  # Trimmed image format
 ch, row, col = 3, 160, 320  # Trimmed image format
 
 model = Sequential()
-# trim image to only see section with road
-
-# cropping
+# cropping image to only see section with road
 model.add(Cropping2D(cropping=((50, 30), (0, 0)), input_shape = (row, col, ch) ) )
 # The example above crops: 50 rows pixels from the top of the image 
 #30 rows pixels from the bottom of the image
@@ -152,20 +154,21 @@ model.add( Conv2D(36, (5, 5), strides = (2, 2),
 model.add( Conv2D(48, (5, 5), strides = (2, 2),
     padding = 'same', activation="relu") )
 
-#model.add( Conv2D(64, (3, 3), strides = (1, 1), 
-#    padding = 'same', activation="relu") )
-#model.add( Conv2D(64, (3, 3), strides = (1, 1),
-#    padding = 'same', activation="relu") )
+model.add( Conv2D(64, (3, 3), strides = (1, 1), 
+    padding = 'same', activation="relu") )
+model.add( Conv2D(64, (3, 3), strides = (1, 1),
+    padding = 'same', activation="relu") )
 
 model.add(Flatten() )
 
-#model.add(Dense(1164) )
-#model.add(Dropout(0.5) )
+model.add(Dense(1164) )
+model.add(Dropout(0.2) )
+
 model.add(Dense(100) )
-model.add(Dropout(0.5) )
+model.add(Dropout(0.2) )
 
 model.add(Dense(50) )
-model.add(Dropout(0.5) )
+model.add(Dropout(0.2) )
 
 model.add(Dense(10) )
 model.add(Dense(1) )
@@ -185,9 +188,10 @@ print('len(train_samples): ', len(train_samples) )
 csv_logger = CSVLogger('log.csv', append=True, separator=';')
 
 loss_history = model.fit_generator(train_generator,
-                    steps_per_epoch = len(train_samples) / bsize, 
+                    steps_per_epoch = len(train_samples) / down_sample_rate, 
                     validation_data = validation_generator,
-                    validation_steps = len(validation_samples) / bsize, epochs = epoch,
+                    validation_steps = len(validation_samples) / down_sample_rate,
+                    epochs = epoch,
                     callbacks=[csv_logger])
 
 model.save('model.h5')
