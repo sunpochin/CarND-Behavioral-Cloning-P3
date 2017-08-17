@@ -40,7 +40,7 @@ def read_image(name, angle, dir):
         # drop 75% angle 0.
         if 0 == angle:
             drop_prob = np.random.random()
-            if drop_prob > 0.75:
+            if drop_prob > 0.5:
                 return None, 4
     elif rightenum == dir: # right
         angle = center_angle - correction
@@ -126,8 +126,8 @@ model.add(Cropping2D(cropping=((50, 30), (0, 0)), input_shape=(160,320,3)))
 # resize: https://discussions.udacity.com/t/keras-lambda-to-resize-seems-causing-the-problem/316247/3?u=sunpochin
 def resize_img(input):
     # ktf must be declared here to 'be stored in the model' and 'let drive.py use it'
-    new_width = 32
-    new_height = 32
+    new_width = 64
+    new_height = 64
     from keras.backend import tf as ktf
     return ktf.image.resize_images(input, (new_width, new_height))
 # resize: https://discussions.udacity.com/t/keras-lambda-to-resize-seems-causing-the-problem/316247/3?u=sunpochin
@@ -191,8 +191,8 @@ for i in range(32):
 print('len(train_samples): ', len(train_samples) )
 # use sample_rate and epoch for quicker test. 
 # If I want to test something quick but rough, set a HIGHER sample_rate to reduce training
-sample_rate = 64
-epoch = 1
+sample_rate = 16
+epoch = 3
 model.fit_generator(train_generator,
                     steps_per_epoch = len(train_samples) / sample_rate, 
                     validation_data = validation_generator,
