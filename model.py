@@ -31,16 +31,15 @@ leftenum = 1
 rightenum = 2
 def read_image(name, angle, dir):
     image = cv2.imread(name)
-    TODO: I should here save some images for the writeup
+    # TODO: I should here save some images for the writeup
     center_angle = angle
     if leftenum == dir: # left
         angle = center_angle + correction
     elif centerenum == dir: # center
         angle = center_angle
         # drop all 0 angle!
-        # drop 75% angle 0.
+        # only keeping 10% angle 0.
         # https://discussions.udacity.com/t/vehicle-drives-in-circles-in-autonomous-mode-what-could-be-going-wrong/283222/3?u=sunpochin
-        # <= 0.85
         if 0 == angle:
             drop_prob = np.random.random()
             if drop_prob > 0.1:
@@ -117,7 +116,7 @@ model = Sequential()
 # trim image to only see section with road
 
 # cropping
-model.add(Cropping2D(cropping=((40, 10), (0, 0)), input_shape = (row, col, ch) ) )
+model.add(Cropping2D(cropping=((50, 30), (0, 0)), input_shape = (row, col, ch) ) )
 # The example above crops: 50 rows pixels from the top of the image 
 #30 rows pixels from the bottom of the image
 #0 columns of pixels from the left of the image 0 columns of pixels from the right of the image
@@ -125,8 +124,8 @@ model.add(Cropping2D(cropping=((40, 10), (0, 0)), input_shape = (row, col, ch) )
 # resize: https://discussions.udacity.com/t/keras-lambda-to-resize-seems-causing-the-problem/316247/3?u=sunpochin
 def resize_img(input):
     # ktf must be declared here to 'be stored in the model' and 'let drive.py use it'
-    new_width = 66
-    new_height = 200
+    new_width = 32
+    new_height = 32
     from keras.backend import tf as ktf
     return ktf.image.resize_images(input, (new_width, new_height))
 # resize: https://discussions.udacity.com/t/keras-lambda-to-resize-seems-causing-the-problem/316247/3?u=sunpochin
@@ -145,17 +144,21 @@ model.add( Conv2D(24, (5, 5), strides = (2, 2),
     padding = 'same', activation="relu") )
 model.add( Conv2D(36, (5, 5), strides = (2, 2),
     padding = 'same', activation="relu") )
+'''
 model.add( Conv2D(48, (5, 5), strides = (2, 2),
     padding = 'same', activation="relu") )
 model.add( Conv2D(64, (3, 3), strides = (1, 1), 
     padding = 'same', activation="relu") )
 model.add( Conv2D(64, (3, 3), strides = (1, 1),
     padding = 'same', activation="relu") )
+'''
 model.add(Flatten() )
+'''
 model.add(Dense(1164) )
 model.add(Dropout(0.5) )
 model.add(Dense(100) )
 model.add(Dropout(0.5) )
+'''
 model.add(Dense(50) )
 model.add(Dropout(0.5) )
 model.add(Dense(10) )
@@ -174,8 +177,8 @@ for i in range(32):
 print('len(train_samples): ', len(train_samples) )
 # use sample_rate and epoch for quicker test. 
 # If I want to test something quick but rough, set a HIGHER sample_rate to reduce training
-sample_rate = 1
-epoch = 10
+sample_rate = 32
+epoch = 3
 from keras.callbacks import CSVLogger
 csv_logger = CSVLogger('log.csv', append=True, separator=';')
 
