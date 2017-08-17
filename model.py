@@ -144,27 +144,30 @@ model.add( Conv2D(24, (5, 5), strides = (2, 2),
     padding = 'same', activation="relu") )
 model.add( Conv2D(36, (5, 5), strides = (2, 2),
     padding = 'same', activation="relu") )
-'''
+
 model.add( Conv2D(48, (5, 5), strides = (2, 2),
     padding = 'same', activation="relu") )
-model.add( Conv2D(64, (3, 3), strides = (1, 1), 
-    padding = 'same', activation="relu") )
-model.add( Conv2D(64, (3, 3), strides = (1, 1),
-    padding = 'same', activation="relu") )
-'''
+
+#model.add( Conv2D(64, (3, 3), strides = (1, 1), 
+#    padding = 'same', activation="relu") )
+#model.add( Conv2D(64, (3, 3), strides = (1, 1),
+#    padding = 'same', activation="relu") )
+
 model.add(Flatten() )
-'''
-model.add(Dense(1164) )
-model.add(Dropout(0.5) )
+
+#model.add(Dense(1164) )
+#model.add(Dropout(0.5) )
 model.add(Dense(100) )
 model.add(Dropout(0.5) )
-'''
+
 model.add(Dense(50) )
 model.add(Dropout(0.5) )
+
 model.add(Dense(10) )
 model.add(Dense(1) )
+
 from keras import optimizers
-adam = optimizers.Adam(lr=0.001)
+adam = optimizers.Adam(lr=0.0001)
 model.compile(loss='mse', optimizer = adam)
 
 '''
@@ -178,7 +181,7 @@ print('len(train_samples): ', len(train_samples) )
 # use sample_rate and epoch for quicker test. 
 # If I want to test something quick but rough, set a HIGHER sample_rate to reduce training
 sample_rate = 1
-epoch = 3
+epoch = 5
 from keras.callbacks import CSVLogger
 csv_logger = CSVLogger('log.csv', append=True, separator=';')
 
