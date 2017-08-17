@@ -5,10 +5,16 @@ from keras.layers.core import Flatten, Dense, Lambda, Dropout
 from keras.layers import Input, Cropping2D
 from keras.layers import Conv2D, MaxPooling2D
 from keras.models import Model
+from keras.callbacks import CSVLogger
 
 import cv2
 import numpy as np
 import sklearn
+
+# use sample_rate and epoch for quicker test. 
+# If I want to test something quick but rough, set a HIGHER sample_rate to reduce training
+bsize = 32
+epoch = 10
 
 #traintag = 'train-4-few'
 traintag = 'udacity-data/'
@@ -69,7 +75,6 @@ def decide_flip_image(image, angle):
     return image, angle
 
 
-bsize = 32
 def generator(samples, batch_size = bsize):
     num_samples = len(samples)
     while 1: # Loop forever so the generator never terminates
@@ -124,8 +129,8 @@ model.add(Cropping2D(cropping=((50, 30), (0, 0)), input_shape = (row, col, ch) )
 # resize: https://discussions.udacity.com/t/keras-lambda-to-resize-seems-causing-the-problem/316247/3?u=sunpochin
 def resize_img(input):
     # ktf must be declared here to 'be stored in the model' and 'let drive.py use it'
-    new_width = 32
-    new_height = 32
+    new_width = 64
+    new_height = 64
     from keras.backend import tf as ktf
     return ktf.image.resize_images(input, (new_width, new_height))
 # resize: https://discussions.udacity.com/t/keras-lambda-to-resize-seems-causing-the-problem/316247/3?u=sunpochin
@@ -144,7 +149,6 @@ model.add( Conv2D(24, (5, 5), strides = (2, 2),
     padding = 'same', activation="relu") )
 model.add( Conv2D(36, (5, 5), strides = (2, 2),
     padding = 'same', activation="relu") )
-
 model.add( Conv2D(48, (5, 5), strides = (2, 2),
     padding = 'same', activation="relu") )
 
@@ -178,17 +182,12 @@ for i in range(32):
 #print('train_generator', train_generator)
 
 print('len(train_samples): ', len(train_samples) )
-# use sample_rate and epoch for quicker test. 
-# If I want to test something quick but rough, set a HIGHER sample_rate to reduce training
-sample_rate = 1
-epoch = 5
-from keras.callbacks import CSVLogger
 csv_logger = CSVLogger('log.csv', append=True, separator=';')
 
 loss_history = model.fit_generator(train_generator,
-                    steps_per_epoch = len(train_samples) / sample_rate, 
+                    steps_per_epoch = len(train_samples) / bsize, 
                     validation_data = validation_generator,
-                    validation_steps = len(validation_samples) / sample_rate, epochs = epoch,
+                    validation_steps = len(validation_samples) / bsize, epochs = epoch,
                     callbacks=[csv_logger])
 
 model.save('model.h5')
