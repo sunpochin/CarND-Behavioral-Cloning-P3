@@ -37,8 +37,11 @@ def read_image(name, angle, dir):
     elif centerenum == dir: # center
         angle = center_angle
         # drop all 0 angle!
+        # drop 75% angle 0.
         if 0 == angle:
-            return None, 4
+            drop_prob = np.random.random()
+            if drop_prob > 0.75:
+                return None, 4
     elif rightenum == dir: # right
         angle = center_angle - correction
     else:
@@ -158,23 +161,22 @@ def preprocess(image):
 
 model.add( Conv2D(24, (5, 5), strides = (2, 2),
     padding = 'same', activation="relu") )
-'''
+
 model.add( Conv2D(36, (5, 5), strides = (2, 2),
-    padding = 'same',
-    activation="relu") )
+    padding = 'same', activation="relu") )
+
 model.add( Conv2D(48, (5, 5), strides = (2, 2),
     padding = 'same', activation="relu") )
-model.add( Conv2D(64, (3, 3), strides = (2, 2), 
+model.add( Conv2D(64, (3, 3), strides = (1, 1), 
     padding = 'same', activation="relu") )
-model.add( Conv2D(64, (3, 3), strides = (2, 2),
+model.add( Conv2D(64, (3, 3), strides = (1, 1),
     padding = 'same', activation="relu") )
-'''
+
+
 model.add(Flatten() )
-####model.add(Dense(1164) )
-'''
+model.add(Dense(1164) )
 model.add(Dense(100) )
 model.add(Dense(50) )
-'''
 model.add(Dense(10) )
 model.add(Dense(1) )
 model.compile(loss='mse', optimizer='adam')
@@ -189,7 +191,7 @@ for i in range(32):
 print('len(train_samples): ', len(train_samples) )
 # use sample_rate and epoch for quicker test. 
 # If I want to test something quick but rough, set a HIGHER sample_rate to reduce training
-sample_rate = 32
+sample_rate = 64
 epoch = 1
 model.fit_generator(train_generator,
                     steps_per_epoch = len(train_samples) / sample_rate, 
