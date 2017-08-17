@@ -177,7 +177,7 @@ for i in range(32):
 print('len(train_samples): ', len(train_samples) )
 # use sample_rate and epoch for quicker test. 
 # If I want to test something quick but rough, set a HIGHER sample_rate to reduce training
-sample_rate = 32
+sample_rate = 1
 epoch = 3
 from keras.callbacks import CSVLogger
 csv_logger = CSVLogger('log.csv', append=True, separator=';')
