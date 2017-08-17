@@ -23,9 +23,8 @@ train_samples, validation_samples = train_test_split(samples, test_size=0.2)
 
 
 # create adjusted steering measurements for the side camera images
-correction = 0.3 # this is a parameter to tune
-#steering_left = center_angle + correction
-#steering_right = center_angle - correction
+# TODO
+correction = 0.25 # this is a parameter to tune
 centerenum = 0
 leftenum = 1
 rightenum = 2
@@ -40,7 +39,7 @@ def read_image(name, angle, dir):
         # drop 75% angle 0.
         if 0 == angle:
             drop_prob = np.random.random()
-            if drop_prob > 0.5:
+            if drop_prob > 0.6:
                 return None, 4
     elif rightenum == dir: # right
         angle = center_angle - correction
@@ -101,10 +100,6 @@ def generator(samples, batch_size = bsize):
             some = sklearn.utils.shuffle(X_train, y_train)
 #            print('some: ', some)
             yield some
-#            some = (X_train, y_train)
-#            print('type of some:', type(some) )
-#            yield some
-#            yield X_train, y_train
 
 
 # compile and train the model using the generator function
@@ -118,7 +113,7 @@ model = Sequential()
 # trim image to only see section with road
 
 # cropping
-model.add(Cropping2D(cropping=((50, 30), (0, 0)), input_shape=(160,320,3)))
+model.add(Cropping2D(cropping=((50, 30), (0, 0)), input_shape = (row, col, ch) ) )
 # The example above crops: 50 rows pixels from the top of the image 
 #30 rows pixels from the bottom of the image
 #0 columns of pixels from the left of the image 0 columns of pixels from the right of the image
@@ -126,8 +121,8 @@ model.add(Cropping2D(cropping=((50, 30), (0, 0)), input_shape=(160,320,3)))
 # resize: https://discussions.udacity.com/t/keras-lambda-to-resize-seems-causing-the-problem/316247/3?u=sunpochin
 def resize_img(input):
     # ktf must be declared here to 'be stored in the model' and 'let drive.py use it'
-    new_width = 64
-    new_height = 64
+    new_width = 32
+    new_height = 32
     from keras.backend import tf as ktf
     return ktf.image.resize_images(input, (new_width, new_height))
 # resize: https://discussions.udacity.com/t/keras-lambda-to-resize-seems-causing-the-problem/316247/3?u=sunpochin
@@ -142,44 +137,31 @@ model.add(Lambda(lambda x: x/127.5 - 1.,
         output_shape=(ch, row, col)))
 #model.add(... finish defining the rest of your model architecture here ...)
 '''
-
-'''
-will have bug in drive.py
-def preprocess(image):
-    resized = ktf.image.resize_images(image, (new_width, new_height))
-    normalized = resized/255.0 - 0.5
-    return normalized
-    '''
-#will have bug in drive.py
-#model.add(Lambda(lambda x: preprocess(x), 
-#    input_shape=(row, col, ch), output_shape=(new_width, new_height, ch)))
-#inp = Input(shape=(row, col, ch))
-#out = Lambda(lambda image: ktf.image.resize_images(image, (new_width, new_height)))(inp)
-#model = Model(input=inp, output=out)
-#model.add(Lambda(lambda x: cv2.resize(x, (new_height, new_width) ), 
-#    input_shape=(row, col, ch), output_shape=(new_height, new_width, ch) ) )
-
 model.add( Conv2D(24, (5, 5), strides = (2, 2),
     padding = 'same', activation="relu") )
-
 model.add( Conv2D(36, (5, 5), strides = (2, 2),
     padding = 'same', activation="relu") )
 
+'''
 model.add( Conv2D(48, (5, 5), strides = (2, 2),
     padding = 'same', activation="relu") )
 model.add( Conv2D(64, (3, 3), strides = (1, 1), 
     padding = 'same', activation="relu") )
 model.add( Conv2D(64, (3, 3), strides = (1, 1),
     padding = 'same', activation="relu") )
-
+'''
 
 model.add(Flatten() )
+'''
 model.add(Dense(1164) )
 model.add(Dense(100) )
 model.add(Dense(50) )
+'''
 model.add(Dense(10) )
 model.add(Dense(1) )
-model.compile(loss='mse', optimizer='adam')
+from keras import optimizers
+adam = optimizers.Adam(lr=0.001)
+model.compile(loss='mse', optimizer = adam)
 
 '''
 for i in range(32):    
@@ -191,9 +173,9 @@ for i in range(32):
 print('len(train_samples): ', len(train_samples) )
 # use sample_rate and epoch for quicker test. 
 # If I want to test something quick but rough, set a HIGHER sample_rate to reduce training
-sample_rate = 1
+sample_rate = 32
 epoch = 5
-model.fit_generator(train_generator,
+loss_history = model.fit_generator(train_generator,
                     steps_per_epoch = len(train_samples) / sample_rate, 
                     validation_data = validation_generator,
                     validation_steps = len(validation_samples) / sample_rate, epochs = epoch)
@@ -202,4 +184,28 @@ model.save('model.h5')
 
 #from keras.utils.visualize_util import plot
 #plot(model, to_file='model.png')
+#https://stackoverflow.com/questions/38445982/how-to-log-keras-loss-output-to-a-file
+import numpy as np
+numpy_loss_history = np.array(loss_history)
+np.savetxt("loss_history.txt", numpy_loss_history, delimiter=",")
 
+# 
+# http://machinelearningmastery.com/display-deep-learning-model-training-history-in-keras/
+# list all data in history
+print(history.history.keys())
+# summarize history for accuracy
+plt.plot(history.history['acc'])
+plt.plot(history.history['val_acc'])
+plt.title('model accuracy')
+plt.ylabel('accuracy')
+plt.xlabel('epoch')
+plt.legend(['train', 'test'], loc='upper left')
+plt.show()
+# summarize history for loss
+plt.plot(history.history['loss'])
+plt.plot(history.history['val_loss'])
+plt.title('model loss')
+plt.ylabel('loss')
+plt.xlabel('epoch')
+plt.legend(['train', 'test'], loc='upper left')
+plt.show()
