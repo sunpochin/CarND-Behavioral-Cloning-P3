@@ -42,7 +42,7 @@ def read_image(name, angle, dir):
         # https://discussions.udacity.com/t/vehicle-drives-in-circles-in-autonomous-mode-what-could-be-going-wrong/283222/3?u=sunpochin
         if 0 == angle:
             drop_prob = np.random.random()
-            if drop_prob > 0.1:
+            if drop_prob > 0.03:
                 return None, 4
     elif rightenum == dir: # right
         angle = center_angle - correction
@@ -180,8 +180,8 @@ for i in range(32):
 print('len(train_samples): ', len(train_samples) )
 # use sample_rate and epoch for quicker test. 
 # If I want to test something quick but rough, set a HIGHER sample_rate to reduce training
-sample_rate = 1
-epoch = 5
+sample_rate = 64
+epoch = 1
 from keras.callbacks import CSVLogger
 csv_logger = CSVLogger('log.csv', append=True, separator=';')
 
@@ -207,12 +207,14 @@ print(loss_history.history.keys())
 import matplotlib.pyplot as plt 
 # summarize history for accuracy
 #plt.plot(loss_history.history['acc'])
+'''
 plt.plot(loss_history.history['val_acc'])
 plt.title('model accuracy')
 plt.ylabel('accuracy')
 plt.xlabel('epoch')
 plt.legend(['train', 'test'], loc='upper left')
 plt.show()
+'''
 # summarize history for loss
 plt.plot(loss_history.history['loss'])
 plt.plot(loss_history.history['val_loss'])
