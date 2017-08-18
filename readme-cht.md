@@ -15,8 +15,8 @@
 它是這篇文章的實做： 
 ["想學做無人車的工程師注意！Google 工程師教你從零開始學「無人駕駛技術」"](https://buzzorange.com/techorange/2017/06/19/self-drive-simulator-n-test/ ) 
 
-這作業是用軟體模擬器，感覺有點像是在玩賽車遊戲。
-原理在上面那篇文章都有講了，我是用 nvidia 出的這個架構，我在心中叫它 [DiaNet](https://devblogs.nvidia.com/parallelforall/deep-learning-self-driving-cars/ ) 
+這作業是用軟體模擬器，感覺有點像是在玩賽車遊戲，操作方法、原理在上面那篇文章都有講了。
+我的 ConvNet 架構是用 nvidia 2016 出的一個無人車架構，我在心中叫它 [DiaNet.](https://devblogs.nvidia.com/parallelforall/deep-learning-self-driving-cars/) 西班牙文中 Dia == Day ，所以 DiaNet 可以翻譯為「天網」。 
 
 如果讀者妳想要試試看用我的 training model 來自動駕駛模擬車，這是我這專案的 [github 連結](https://github.com/sunpochin/CarND-Behavioral-Cloning-P3)，
 這是模擬器的 [下載連結](https://d17h27t6h515a5.cloudfront.net/topher/2017/February/58ae4419_windows-sim/windows-sim.zip)，
