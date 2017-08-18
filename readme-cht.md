@@ -2,15 +2,25 @@
 ---
 說明
 ----
-這個影片是 udacity 自駕車課程其中一個作業，我目前做到的錄影。
+這個影片是 udacity 自駕車課程其中一個作業，我目前做到的錄影：
 
 [![IMAGE ALT TEXT HERE](https://img.youtube.com/vi/O4reOzBoT5M/0.jpg)](https://www.youtube.com/watch?v=O4reOzBoT5M)
+
+背景音樂： [Bendito Kejío: Blas Córdoba canta y Chano Domínguez](https://www.youtube.com/watch?v=8P2TBhCObsQ)
 
 它是這篇文章的實做： 
 ["想學做無人車的工程師注意！Google 工程師教你從零開始學「無人駕駛技術」"](https://buzzorange.com/techorange/2017/06/19/self-drive-simulator-n-test/ ) 
 
 這作業是用軟體模擬器，感覺有點像是在玩賽車遊戲。
-原理在上面那篇文章都有講了，我是用 nvidia 出的這個架構，我都叫它 [nvidiaNet](https://devblogs.nvidia.com/parallelforall/deep-learning-self-driving-cars/ ) 
+原理在上面那篇文章都有講了，我是用 nvidia 出的這個架構，我在心中叫它 [DiaNet](https://devblogs.nvidia.com/parallelforall/deep-learning-self-driving-cars/ ) 
+
+如果讀者妳想要試試看用我的 training model 來自動駕駛模擬車，這是我這專案的 [github 連結](https://sunpochin.github.io/CarND-Behavioral-Cloning-P3/)，
+這是模擬器的 [下載連結](https://d17h27t6h515a5.cloudfront.net/topher/2017/February/58ae4419_windows-sim/windows-sim.zip)，
+這裡是udacity 的預設 training set [連結](https://d17h27t6h515a5.cloudfront.net/topher/2016/December/584f6edd_data/data.zip)。
+
+
+
+
 
 Bug
 ---
