@@ -15,9 +15,9 @@ import sklearn
 # use sample_rate and epoch for quicker test. 
 # If I want to test something quick but rough, set a HIGHER sample_rate to reduce training
 bsize = 32
-epoch = 15
-down_sample_rate = 1
-#down_sample_rate = 1 * bsize
+epoch = 5
+#down_sample_rate = 1
+down_sample_rate = 1 * bsize
 
 #traintag = 'train-4-few'
 traintag = 'udacity-data/'
@@ -148,22 +148,29 @@ model.add(Lambda(lambda x: x/127.5 - 1.,
         output_shape=(ch, row, col)))
 #model.add(... finish defining the rest of your model architecture here ...)
 '''
+
+'''
 model.add( Conv2D(24, (5, 5), strides = (2, 2),
     padding = 'same', activation="relu") )
 model.add( Conv2D(36, (5, 5), strides = (2, 2),
     padding = 'same', activation="relu") )
 model.add( Conv2D(48, (5, 5), strides = (2, 2),
     padding = 'same', activation="relu") )
-
 model.add( Conv2D(64, (3, 3), strides = (1, 1), 
     padding = 'same', activation="relu") )
 model.add( Conv2D(64, (3, 3), strides = (1, 1),
     padding = 'same', activation="relu") )
+'''
+
+# TODO: save model checkpoint
+
+model.add( Conv2D(48, (5, 5), strides = (2 ,  2),
+    padding = 'same', activation="relu") )
 
 model.add(Flatten() )
 
-model.add(Dense(1164) )
-model.add(Dropout(0.2) )
+#model.add(Dense(1164) )
+#model.add(Dropout(0.2) )
 
 model.add(Dense(100) )
 model.add(Dropout(0.2) )
@@ -194,7 +201,6 @@ loss_history = model.fit_generator(train_generator,
                     validation_steps = len(validation_samples) / down_sample_rate,
                     epochs = epoch,
                     callbacks=[csv_logger])
-
 model.save('model.h5')
 
 #from keras.utils.visualize_util import plot

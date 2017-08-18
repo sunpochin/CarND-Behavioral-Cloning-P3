@@ -1,0 +1,33 @@
+udacity dataset has 8036 entrys.
+
+git_generator, offset max 6400
+
+
+
+dict_keys(['loss', 'val_loss'])
+Traceback (most recent call last):
+  File "model.py", line 207, in <module>
+    plt.plot(loss_history.history['val_acc'])
+KeyError: 'val_acc'
+
+
+
+
+experiments:
+run 1:
+bumped into a wall at the muddy ground entrance.
+            if drop_prob > 0.03:
+sample_rate = 64
+epoch = 1			
+
+
+how to fix "muddy ground"?
+
+try with resize image 64x64 instead of 32x32.
+
+but this will cause it bumping in the bridege BEFORE the muddy ground.
+
+
+
+
+bumped into the bridge.
