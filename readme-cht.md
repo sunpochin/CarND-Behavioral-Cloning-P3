@@ -22,7 +22,15 @@
 這是模擬器的 [下載連結](https://d17h27t6h515a5.cloudfront.net/topher/2017/February/58ae4419_windows-sim/windows-sim.zip)，
 這裡是udacity 的預設 training set [連結](https://d17h27t6h515a5.cloudfront.net/topher/2016/December/584f6edd_data/data.zip)。
 
-
+實做
+---
+1. (「Google 工程師」文章提到的) 觀察一： Angle 0 我用 ```np.random.random() ``` 過濾掉 99% , 現在想起來會不會太多了點，也許多留一些 Angle 0 會讓車子輪胎不會總是在轉。 
+2. 觀察二：我的參數是給 0.25 .
+3. 觀察三：「利用反轉」增加 training set: 我並沒有增加 training set, 而是 on the fly 的用 0.5 的機率來決定這張圖要不要反轉。我沒有增加 training set 的原因是，我想到的實做方法是要另外寫一段 code 在最前面，我就是目前還沒有寫到那段。
+4. 觀察四：crop image & resize image, 也都做了，也都是在 keras model 裡面 on the fly 做。
+5. 觀察五：Normalization 有做。
+6. 架構用 nvidia net.
+7. image preprocessing, 加上 ```fit_generator``` 技巧之後，我的筆電 GTX 950M 2.0 GiB 才可以裝得下 nvidia net.
 
 
 
