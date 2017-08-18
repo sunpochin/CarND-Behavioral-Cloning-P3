@@ -36,13 +36,16 @@
 
 Bug
 ---
-我犯了一個很大的錯誤是沒有做好足夠的 visualization, 也就少了一個 debug 的重要武器。 
+1. 我犯了一個很大的錯誤是沒有做好足夠的 visualization, 也就少了一個 debug 的重要武器。 
 這個 bug 的實做細節是我沒有注意到 opencv 讀圖檔時要注意 channel 的順序是否正確，少了一行 
 ```
 image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB) .
 ```
 
-在寫了一支程式比對「實際餵給 keras 的圖檔」跟「自己想像中餵給 keras 的圖檔」後，才發現顏色錯了。這個問題導致車子在走過橋樑之後總是會偏到左邊。
+ 	在寫了一支程式比對「實際餵給 keras 的圖檔」跟「自己想像中餵給 keras 的圖檔」後，才發現顏色錯了。這個問題導致車子在走過橋樑之後總是會偏到左邊。
+2. 我的個人電腦是 windows 筆電，GPU 似乎不夠快，於是開了 AWS 來 train 的 model, 但 AWS train model 完之後 WinSCP 抓回來執行，得到一個錯誤訊息說我兩邊 keras 版本不同，一個是 2.0.6 另個是 2.0.4. 
+	
+	最後解決方法是：我在 AWS ubuntu 新開一個 anaconda env, 讓 AWS & windows 10 兩邊通通是 anaconda3, python 3.5.3, keras 2.0.4, tensorflow-gpu 這樣的環境。
 
 後續
 ---
