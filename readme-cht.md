@@ -1,6 +1,6 @@
-# 自駕車課程作業 Behavioral Cloning
+# 自駕車課程作業 駕駛行為複製 (Self driving car project: Behavioral Cloning)
 ---
-
+[English Version](https://sunpochin.github.io/carND-Behavioral-Cloning-P3/)
 
 說明
 ----
