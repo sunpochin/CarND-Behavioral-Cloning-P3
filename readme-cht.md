@@ -56,3 +56,4 @@ image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB) .
   第一個 track 有課程提供的 default 資料，我因為想要減少變因，就使用了 default 資料。不過它好像在錄影時速度保持慢速，所以用這個 dataset train 出來的車子也是慢慢跑。
 
 
+
