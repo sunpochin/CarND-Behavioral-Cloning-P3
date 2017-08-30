@@ -8,8 +8,6 @@
 
 [![IMAGE ALT TEXT HERE](https://img.youtube.com/vi/O4reOzBoT5M/0.jpg)](https://www.youtube.com/watch?v=O4reOzBoT5M)
 
-背景音樂： [Bendito Kejío: Blas Córdoba canta y Chano Domínguez](https://www.youtube.com/watch?v=8P2TBhCObsQ)
-
 它的原理是，我們要能讓我們的模擬車知道，在道路的照片長怎樣的時候該右轉，左轉，或是維持直線。
 所以
 1. 先用 training mode 得到一堆 "道路的照片" 跟 "方向盤左右角度" 的資料作為 training data, 
