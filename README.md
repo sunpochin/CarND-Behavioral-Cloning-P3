@@ -4,7 +4,10 @@ Overview
 ---
 This is my udacity self driving car project, which tries to train a model to predict which "steering angle" to use according to different situations.
 
-A recording of the simulation could be found [here](https://www.youtube.com/watch?v=O4reOzBoT5M) .
+A recording of the simulation could be found here:
+
+[![IMAGE ALT TEXT HERE](https://img.youtube.com/vi/O4reOzBoT5M/0.jpg)](https://www.youtube.com/watch?v=O4reOzBoT5M)
+
 
 ConvNet Architecture
 ---
