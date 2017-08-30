@@ -11,7 +11,37 @@ A recording of the simulation could be found here:
 
 ConvNet Architecture
 ---
-I use the network architecture nvidia used for their self driving car. [Link here](https://devblogs.nvidia.com/parallelforall/deep-learning-self-driving-cars/)
+I use a modified network architecture nvidia used for their self driving car, which added some dropouts.
+[Link here](https://devblogs.nvidia.com/parallelforall/deep-learning-self-driving-cars/)
+
+My final model consisted of the following layers:
+
+| Layer             		|     Description	        					| 
+|:---------------------:|:---------------------------------------------:| 
+| Input         	    	| 64x64x1 Gray-scale normalized image   				| 
+| Convolution 5x5     	| 2x2 stride, same padding, output depth 24            |
+| RELU		        			|												|
+| Convolution 5x5	      | 2x2 stride, same padding, output depth 36|
+| RELU			        		|												|
+| Convolution 5x5	      | 2x2 stride, same padding, output depth 48|
+| RELU			        		|												|
+| Convolution 3x3	      | 1x1 stride, same padding, output depth 64|
+| RELU			        		|												|
+| Convolution 3x3	      | 1x1 stride, same padding, output depth 64|
+| RELU			        		|												|
+| Fully connected		| outputs 1152       							|
+| Fully connected		| outputs 1164       							|
+| Dropout				| 20% 											|
+| Fully connected		| outputs 100       							|
+| Dropout				| 20% 											|
+| Fully connected		| outputs 50       							|
+| Dropout				| 20% 											|
+| Fully connected		| outputs 10       							|
+| Fully connected		| outputs 1       							|
+|						|												|
+ 
+
+
 
 Implementation details and parameters
 ---
