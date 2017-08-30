@@ -2,4 +2,4 @@
 
 Overview
 ---
-Just finished my first OK model. Need some fresh air before completing this writeup.
+This is my udacity self driving car project, which tries to train a model to predict which "steering angle" to use according to different situations.
