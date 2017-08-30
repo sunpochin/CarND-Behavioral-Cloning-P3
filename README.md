@@ -50,3 +50,13 @@ Implementation details and parameters
 3. I use images from all three cameras, and a angle correction of 0.25 .
 
 
+Implementation challenges 
+---
+1. Not enough visualization as debugging forgot ```image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB) . ```
+2. keras version doesn't match between my AWS and local machine.
+3. Make it driving faster. In ```drive.py``` I can set ```set_speed``` to different values other than 9.
+
+
+
+
+
