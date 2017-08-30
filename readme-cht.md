@@ -1,7 +1,5 @@
-# 自駕車課程作業之「我終於也做了點 "Google 工程師會做的事情" 啦」
+# 自駕車課程作業 Behavioral Cloning
 ---
-
-(是說，不管哪種工程師，都一定會的同一件事情是：寫出 bug. 所以寫程式前，要先想好怎麼 test & debug)
 
 
 說明
@@ -12,17 +10,24 @@
 
 背景音樂： [Bendito Kejío: Blas Córdoba canta y Chano Domínguez](https://www.youtube.com/watch?v=8P2TBhCObsQ)
 
-它是這篇文章的實做： 
+它的原理是，我們要能讓我們的模擬車知道，在道路的照片長怎樣的時候該右轉，左轉，或是維持直線。
+所以
+1. 先用 training mode 得到一堆 "道路的照片" 跟 "方向盤左右角度" 的資料作為 training data, 
+2. "道路的照片" 當作 feature/input, "方向盤左右角度" 當作 label/output, 訓練出一個 model,
+3. 然後把這個 model 套用在 自動駕駛模式，當模擬車看到目前的 道路的照片，就去找一個最適合的 方向盤左右角度，讓模擬車維持在道路中間。
+
+
+也就是以下這篇文章講的同樣一個 project：
 ["想學做無人車的工程師注意！Google 工程師教你從零開始學「無人駕駛技術」"](https://buzzorange.com/techorange/2017/06/19/self-drive-simulator-n-test/ ) 
 
 這作業是用軟體模擬器，感覺有點像是在玩賽車遊戲，操作方法、原理在上面那篇文章都有講了。
-我的 ConvNet 架構是用 nvidia 2016 出的一個無人車架構，我在心中叫它 [DiaNet.](https://devblogs.nvidia.com/parallelforall/deep-learning-self-driving-cars/) 西班牙文中 Dia == Day ，所以 DiaNet 可以翻譯為「天網」。 
+我的 ConvNet 架構是用 nvidia 2016 出的一個無人車架構， [nvidia net.](https://devblogs.nvidia.com/parallelforall/deep-learning-self-driving-cars/) 
 
 如果讀者妳想要試試看用我的 training model 來自動駕駛模擬車，這是我這專案的 [github 連結](https://github.com/sunpochin/CarND-Behavioral-Cloning-P3)，
 這是模擬器的 [下載連結](https://d17h27t6h515a5.cloudfront.net/topher/2017/February/58ae4419_windows-sim/windows-sim.zip)，
 這裡是udacity 的預設 training set [連結](https://d17h27t6h515a5.cloudfront.net/topher/2016/December/584f6edd_data/data.zip)。
 
-實做
+實做細節：
 ---
 1. (「Google 工程師」文章提到的) 觀察一： Angle 0 我用 ```np.random.random() ``` 過濾掉 99% , 現在想起來會不會太多了點，也許多留一些 Angle 0 會讓車子輪胎不會總是在轉。 
 2. 觀察二：我的參數是給 0.25 .
