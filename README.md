@@ -100,6 +100,7 @@ My final model consisted of the following layers:
 ### 3. Model parameter tuning
 
 1. From some basic EDA I learned a great portion of training data has label steering angle 0, which might cause issues. So I tried to filter out 99% of them using ```random()``` .
+
 ![vis-image1]
 
 2. I use images from all three cameras, and an "angle correction" of 0.25 .
