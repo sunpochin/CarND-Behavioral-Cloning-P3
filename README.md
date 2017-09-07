@@ -1,7 +1,7 @@
 # Behaviorial Cloning Project
 
 # Overview
----
+
 This is my udacity self driving car project, which tries to train a model to predict which "steering angle" to use according to different situations.
 
 A recording of the simulation could be found here:
@@ -12,10 +12,9 @@ A recording of the simulation could be found here:
 
 # Rubric points
 Here I will consider the rubric points individually and describe how I addressed each point in my implementation.
----
 
 ## Files Submitted & Code Quality
----
+
 ### 1. Submission includes all required files and can be used to run the simulator in autonomous mode
 
 My project includes the following files:
@@ -36,7 +35,7 @@ The model.py file contains the code for training and saving the convolution neur
 
 
 ## Model Architecture and Training Strategy
----
+
 ### 1. An appropriate model architecture has been employed
 
 I use a modified network architecture nvidia used for their self driving car, which added some dropouts.
@@ -77,9 +76,9 @@ My final model consisted of the following layers:
 
 ### 3. Model parameter tuning
 ---
-#### 1. I use the "default udacity dataset" to reduce changing factors.
-#### 2. From some basic EDA I learned a great portion of training data has label steering angle 0, which might cause issues. So I tried to filter out 99% of them using ```random()``` .
-#### 3. I use images from all three cameras, and a angle correction of 0.25 .
+1. I use the "default udacity dataset" to reduce changing factors.
+2. From some basic EDA I learned a great portion of training data has label steering angle 0, which might cause issues. So I tried to filter out 99% of them using ```random()``` .
+3. I use images from all three cameras, and a angle correction of 0.25 .
 
 ### 4. Appropriate training data
 ---
