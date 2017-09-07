@@ -8,6 +8,10 @@ A recording of the simulation could be found here:
 
 [![IMAGE ALT TEXT HERE](https://img.youtube.com/vi/O4reOzBoT5M/0.jpg)](https://www.youtube.com/watch?v=O4reOzBoT5M)
 
+I started with LeNet-5 model from previous lab, it doesn't work.
+Then I
+
+I use a modified network architecture nvidia used for their self driving car, which added some dropouts.
 
 
 # Rubric points
@@ -37,6 +41,9 @@ The model.py file contains the code for training and saving the convolution neur
 ## Model Architecture and Training Strategy
 
 ### 1. An appropriate model architecture has been employed
+
+I started with LeNet-5 model from previous lab, it doesn't work.
+Then I
 
 I use a modified network architecture nvidia used for their self driving car, which added some dropouts.
 [Link here](https://devblogs.nvidia.com/parallelforall/deep-learning-self-driving-cars/)

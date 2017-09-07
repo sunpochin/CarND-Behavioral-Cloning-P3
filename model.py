@@ -44,38 +44,38 @@ class columnIdx(Enum):
     steering = 3
 
 
-
-def read_image(name, angle, dir):
+#
+def read_image(name, steering_angle, carmeradir):
     image = cv2.imread(name)
     image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
     # TODO: I should here save some images for the writeup
-    center_angle = angle
-    if columnIdx.left == dir: # left
-        angle = center_angle + correction
-    elif columnIdx.center == dir: # center
-        angle = center_angle
+    if columnIdx.left == carmeradir: # left
+        angle = steering_angle + correction
+    elif columnIdx.center == carmeradir: # center
+        angle = steering_angle
         # drop all 0 angle!
         # only keeping 10% angle 0.
         # https://discussions.udacity.com/t/vehicle-drives-in-circles-in-autonomous-mode-what-could-be-going-wrong/283222/3?u=sunpochin
         if 0 == angle:
             drop_prob = np.random.random()
+            # this is a parameter to tune
             if drop_prob > 0.01:
-                return None, 4
-    elif columnIdx.right == dir: # right
-        angle = center_angle - correction
+                return None, None
+    elif columnIdx.right == carmeradir: # right
+        angle = steering_angle - correction
     else:
         pass
 
     if image.any() == None:
         print("Invalid image path:", center_name)
-        return None, 4
+        return None, None
     else:
         pass
 
     return image, angle
 
-# decide whether to horizontally flip the image:
-def decide_flip_image(image, angle):
+# flipt 50 percent of the images horizontally:
+def flip_50_percent_image(image, angle):
     # https://discussions.udacity.com/t/using-generator-to-implement-random-augmentations/242185/7
     flip_prob = np.random.random()
     if flip_prob > 0.5:
@@ -97,18 +97,17 @@ def generator(samples, batch_size = bsize):
             angles = []
             for batch_sample in batch_samples:
                 # to skip the first row: column name.
-                if batch_sample[3] == 'steering':
+                if batch_sample[columnIdx.steering.value] == 'steering':
                     continue
-                center_angle = float(batch_sample[3] )
-
+                steering_angle = float(batch_sample[columnIdx.steering.value] )
                 cameras_dir = [columnIdx.center, columnIdx.left, columnIdx.right]
                 for camera in cameras_dir:
                     name = './' + traintag + batch_sample[camera.value].strip().split('\\')[-1]
-                    image, angle = read_image(name, center_angle, camera)
-                    if (angle == 4):
-    #                    print("None image! : ", camera)
+                    image, angle = read_image(name, steering_angle, camera)
+                    if (None == image):
+#                        print("None image! : ", camera)
                         continue
-                    image, angle = decide_flip_image(image, angle)
+                    image, angle = flip_50_percent_image(image, angle)
                     images.append(image)
                     angles.append(angle)
             X_train = np.array(images)
