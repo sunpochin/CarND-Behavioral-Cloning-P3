@@ -16,6 +16,16 @@ epoch = 5
 down_sample_rate = 1
 #down_sample_rate = 1 * bsize
 
+# used to create adjusted steering measurements for the side camera images
+correction = 0.25 # this is a parameter to tune
+
+from enum import Enum
+class columnIdx(Enum):
+    center = 0
+    left = 1
+    right = 2
+    steering = 3
+
 #traintag = 'train-4-few'
 traintag = 'udacity-data/'
 
@@ -32,22 +42,12 @@ samples = GetSampleFullname()
 from sklearn.model_selection import train_test_split
 train_samples, validation_samples = train_test_split(samples, test_size=0.2)
 
-# create adjusted steering measurements for the side camera images
-# TODO
-correction = 0.25 # this is a parameter to tune
-
-from enum import Enum
-class columnIdx(Enum):
-    center = 0
-    left = 1
-    right = 2
-    steering = 3
-
-
 #
 def read_image(name, steering_angle, carmeradir):
     image = cv2.imread(name)
+    # !!! After adding the next cvtColor line to correctly read image and my model finally worked.
     image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+    angle = 0
     # TODO: I should here save some images for the writeup
     if columnIdx.left == carmeradir: # left
         angle = steering_angle + correction
@@ -74,7 +74,7 @@ def read_image(name, steering_angle, carmeradir):
 
     return image, angle
 
-# flipt 50 percent of the images horizontally:
+# flip 50 percent of the images horizontally:
 def flip_50_percent_image(image, angle):
     # https://discussions.udacity.com/t/using-generator-to-implement-random-augmentations/242185/7
     flip_prob = np.random.random()
@@ -97,7 +97,7 @@ def generator(samples, batch_size = bsize):
             angles = []
             for batch_sample in batch_samples:
                 # to skip the first row: column name.
-                if batch_sample[columnIdx.steering.value] == 'steering':
+                if 'steering' == batch_sample[columnIdx.steering.value]:
                     continue
                 steering_angle = float(batch_sample[columnIdx.steering.value] )
                 cameras_dir = [columnIdx.center, columnIdx.left, columnIdx.right]

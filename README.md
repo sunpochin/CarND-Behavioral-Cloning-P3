@@ -8,11 +8,16 @@ A recording of the simulation could be found here:
 
 [![IMAGE ALT TEXT HERE](https://img.youtube.com/vi/O4reOzBoT5M/0.jpg)](https://www.youtube.com/watch?v=O4reOzBoT5M)
 
-I started with LeNet-5 model from previous lab, it doesn't work.
-Then I
+I use default udacity training set, started with LeNet-5 architecture and the nvidia one mentioned from previous lessons, both didn't work.
 
-I use a modified network architecture nvidia used for their self driving car, which added some dropouts.
-
+Then I tried tuning with various techniques learned from the class forum, including:
+1. Cropping the images.
+2. Resizing the images.
+3. Normalizing the images.
+4. Flippping 50 percent of the images horizontally.
+5. Adding dropouts to avoid over fitting.
+6. Remove 99% of steering == 0 datas.
+Finally I got a working model.
 
 # Rubric points
 Here I will consider the rubric points individually and describe how I addressed each point in my implementation.
@@ -42,10 +47,7 @@ The model.py file contains the code for training and saving the convolution neur
 
 ### 1. An appropriate model architecture has been employed
 
-I started with LeNet-5 model from previous lab, it doesn't work.
-Then I
-
-I use a modified network architecture nvidia used for their self driving car, which added some dropouts.
+I use the network architecture nvidia used for their self driving car, which added some dropouts.
 [Link here](https://devblogs.nvidia.com/parallelforall/deep-learning-self-driving-cars/)
 
 My final model consisted of the following layers:
@@ -77,22 +79,19 @@ My final model consisted of the following layers:
 
 
 ### 2. Attempts to reduce overfitting in the model
----
 
+1. I used 20% of training data as validation set. (``` train_test_split(samples, test_size=0.2) ``` )
+2. I added 3 dropout layers which seem to reduce the wobbling driving.
+3. I learned a technique to turned horizontally 50% of image, which fixed the car running into the sandy ground area. (```def flip_50_percent_image```)
 
 
 ### 3. Model parameter tuning
----
-1. I use the "default udacity dataset" to reduce changing factors.
-2. From some basic EDA I learned a great portion of training data has label steering angle 0, which might cause issues. So I tried to filter out 99% of them using ```random()``` .
-3. I use images from all three cameras, and a angle correction of 0.25 .
+
+1. From some basic EDA I learned a great portion of training data has label steering angle 0, which might cause issues. So I tried to filter out 99% of them using ```random()``` .
+2. I use images from all three cameras, and a angle correction of 0.25 .
 
 ### 4. Appropriate training data
----
 
+1. At first I tried to generate training data in simulator training mode, but my model didn't do well.
+In order to reduce changing factors I use the "default udacity dataset" instead.
 
-Implementation challenges
----
-1. Not enough visualization as debugging. forgot ```image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB) . ```
-2. keras version doesn't match between my AWS and local machine.
-3. To make it driving faster. In ```drive.py``` I can set ```set_speed``` to different values other than 9.
