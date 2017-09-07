@@ -35,17 +35,24 @@ train_samples, validation_samples = train_test_split(samples, test_size=0.2)
 # create adjusted steering measurements for the side camera images
 # TODO
 correction = 0.25 # this is a parameter to tune
-centerenum = 0
-leftenum = 1
-rightenum = 2
+
+from enum import Enum
+class columnIdx(Enum):
+    center = 0
+    left = 1
+    right = 2
+    steering = 3
+
+
+
 def read_image(name, angle, dir):
     image = cv2.imread(name)
     image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
     # TODO: I should here save some images for the writeup
     center_angle = angle
-    if leftenum == dir: # left
+    if columnIdx.left == dir: # left
         angle = center_angle + correction
-    elif centerenum == dir: # center
+    elif columnIdx.center == dir: # center
         angle = center_angle
         # drop all 0 angle!
         # only keeping 10% angle 0.
@@ -54,7 +61,7 @@ def read_image(name, angle, dir):
             drop_prob = np.random.random()
             if drop_prob > 0.01:
                 return None, 4
-    elif rightenum == dir: # right
+    elif columnIdx.right == dir: # right
         angle = center_angle - correction
     else:
         pass
@@ -75,7 +82,6 @@ def decide_flip_image(image, angle):
     # flip the image and reverse the steering angle
         angle = -1 * angle
         image = cv2.flip(image, 1)
-
     return image, angle
 
 # used to fit_generator in batch, avoid out of memory.
@@ -95,9 +101,9 @@ def generator(samples, batch_size = bsize):
                     continue
                 center_angle = float(batch_sample[3] )
 
-                cameras_dir = [centerenum, leftenum, rightenum]
+                cameras_dir = [columnIdx.center, columnIdx.left, columnIdx.right]
                 for camera in cameras_dir:
-                    name = './' + traintag + batch_sample[camera].strip().split('\\')[-1]
+                    name = './' + traintag + batch_sample[camera.value].strip().split('\\')[-1]
                     image, angle = read_image(name, center_angle, camera)
                     if (angle == 4):
     #                    print("None image! : ", camera)
