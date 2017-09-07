@@ -1,4 +1,4 @@
-*.h5
+model.h5
 run*
 train*/
 udacity-data*
