@@ -1,21 +1,21 @@
 import os
 import csv
+import cv2
+import numpy as np
+import sklearn
 from keras.models import Sequential
 from keras.layers.core import Flatten, Dense, Lambda, Dropout
 from keras.layers import Input, Cropping2D
 from keras.layers import Conv2D, MaxPooling2D
 from keras.models import Model
 from keras.callbacks import CSVLogger
-import matplotlib.pyplot as plt 
+from keras.callbacks import EarlyStopping, ReduceLROnPlateau, ModelCheckpoint, TensorBoard
+import matplotlib.pyplot as plt
 
-import cv2
-import numpy as np
-import sklearn
-
-# use sample_rate and epoch for quicker test. 
+# use sample_rate and epoch for quicker test.
 # If I want to test something quick but rough, set a HIGHER sample_rate to reduce training
 bsize = 32
-epoch = 15
+epoch = 5
 down_sample_rate = 1
 #down_sample_rate = 1 * bsize
 
@@ -125,7 +125,7 @@ ch, row, col = 3, 160, 320  # Trimmed image format
 model = Sequential()
 # cropping image to only see section with road
 model.add(Cropping2D(cropping=((50, 30), (0, 0)), input_shape = (row, col, ch) ) )
-# The example above crops: 50 rows pixels from the top of the image 
+# The example above crops: 50 rows pixels from the top of the image
 #30 rows pixels from the bottom of the image
 #0 columns of pixels from the left of the image 0 columns of pixels from the right of the image
 
@@ -141,7 +141,7 @@ def resize_img(input):
 model.add(Lambda(resize_img))
 model.add(Lambda(lambda x:x / 255.0 - 0.5, input_shape = (row, col, ch) ) )
 
-# Preprocess incoming data, centered around zero with small standard deviation 
+# Preprocess incoming data, centered around zero with small standard deviation
 '''
 model.add(Lambda(lambda x: x/127.5 - 1.,
         input_shape=(ch, row, col),
@@ -155,7 +155,7 @@ model.add( Conv2D(36, (5, 5), strides = (2, 2),
 model.add( Conv2D(48, (5, 5), strides = (2, 2),
     padding = 'same', activation="relu") )
 
-model.add( Conv2D(64, (3, 3), strides = (1, 1), 
+model.add( Conv2D(64, (3, 3), strides = (1, 1),
     padding = 'same', activation="relu") )
 model.add( Conv2D(64, (3, 3), strides = (1, 1),
     padding = 'same', activation="relu") )
@@ -163,14 +163,8 @@ model.add( Conv2D(64, (3, 3), strides = (1, 1),
 model.add(Flatten() )
 
 model.add(Dense(1164) )
-model.add(Dropout(0.2) )
-
 model.add(Dense(100) )
-model.add(Dropout(0.2) )
-
 model.add(Dense(50) )
-model.add(Dropout(0.2) )
-
 model.add(Dense(10) )
 model.add(Dense(1) )
 
@@ -179,7 +173,7 @@ adam = optimizers.Adam(lr=0.0001)
 model.compile(loss='mse', optimizer = adam)
 
 '''
-for i in range(32):    
+for i in range(32):
     train = next(train_generator)
     print(train[0].shape)
 '''
@@ -188,12 +182,37 @@ for i in range(32):
 print('len(train_samples): ', len(train_samples) )
 csv_logger = CSVLogger('log.csv', append=True, separator=';')
 
+
+'''
+             ReduceLROnPlateau(monitor='val_dice_loss',
+                               factor=0.1,
+                               patience=4,
+                               verbose=1,
+                               epsilon=1e-4,
+                               mode='max'),
+            EarlyStopping(monitor='val_loss',
+                           patience=8,
+                           verbose=1,
+                           min_delta=1e-4,
+                           mode='max'),
+'''
+# the best_weights actually won't work because in drive.py uses load_model().
+callbacks = [
+            ModelCheckpoint(monitor='val_loss',
+                             filepath='weights/best_weights.hdf5',
+                             save_best_only=True,
+                             save_weights_only=True,
+                             mode='max'),
+            TensorBoard(log_dir='logs'),
+            CSVLogger('log.csv', append=True, separator=';') ]
+
+
 loss_history = model.fit_generator(train_generator,
-                    steps_per_epoch = len(train_samples) / down_sample_rate, 
+                    steps_per_epoch = len(train_samples) / down_sample_rate,
                     validation_data = validation_generator,
                     validation_steps = len(validation_samples) / down_sample_rate,
                     epochs = epoch,
-                    callbacks=[csv_logger])
+                    callbacks=callbacks)
 
 model.save('model.h5')
 
@@ -204,11 +223,11 @@ import numpy as np
 #numpy_loss_history = np.array(loss_history)
 #np.savetxt("loss_history.txt", numpy_loss_history, delimiter=",")
 
-# 
+#
 # http://machinelearningmastery.com/display-deep-learning-model-training-history-in-keras/
 # list all data in history
 print(loss_history.history.keys())
-import matplotlib.pyplot as plt 
+import matplotlib.pyplot as plt
 # summarize history for loss
 plt.plot(loss_history.history['loss'])
 plt.plot(loss_history.history['val_loss'])
