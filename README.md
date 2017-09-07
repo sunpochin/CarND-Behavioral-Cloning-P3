@@ -1,5 +1,11 @@
 # Behaviorial Cloning Project
 
+[vis-image1]: ./pics/bins100.png "bins 100"
+[vis-image2]: ./pics/bins500.png "bins 500"
+[vis-image3]: ./pics/cnn-architecture-624x890.png "nvidia arch."
+
+
+
 # Overview
 
 This is my udacity self driving car project, which tries to train a model to predict which "steering angle" to use according to different situations.
@@ -17,7 +23,11 @@ Then I tried tuning with various techniques learned from the class forum, includ
 4. Flippping 50 percent of the images horizontally.
 5. Adding dropouts to avoid over fitting.
 6. Remove 99% of steering == 0 datas.
+
 Finally I got a working model.
+
+
+<br>
 
 # Rubric points
 Here I will consider the rubric points individually and describe how I addressed each point in my implementation.
@@ -30,7 +40,7 @@ My project includes the following files:
 * model.py containing the script to create and train the model
 * drive.py for driving the car in autonomous mode
 * model.h5 containing a trained convolution neural network
-* writeup_report.md or writeup_report.pdf summarizing the results
+* readme.md summarizing the results
 
 ### 2. Submission includes functional code
 Using the Udacity provided simulator and my drive.py file, the car can be driven autonomously around the track by executing
@@ -49,6 +59,8 @@ The model.py file contains the code for training and saving the convolution neur
 
 I use the network architecture nvidia used for their self driving car, which added some dropouts.
 [Link here](https://devblogs.nvidia.com/parallelforall/deep-learning-self-driving-cars/)
+
+![vis-image3]
 
 My final model consisted of the following layers:
 
@@ -88,7 +100,9 @@ My final model consisted of the following layers:
 ### 3. Model parameter tuning
 
 1. From some basic EDA I learned a great portion of training data has label steering angle 0, which might cause issues. So I tried to filter out 99% of them using ```random()``` .
-2. I use images from all three cameras, and a angle correction of 0.25 .
+![vis-image1]
+
+2. I use images from all three cameras, and an "angle correction" of 0.25 .
 
 ### 4. Appropriate training data
 
