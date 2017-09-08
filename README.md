@@ -5,6 +5,15 @@
 [vis-image3]: ./pics/cnn-architecture-624x890.png "nvidia arch."
 
 
+[vis-aug-1]: ./pics/center_2016_12_01_13_31_13_786.jpg "center"
+[vis-aug-2]: ./pics/left_2016_12_01_13_31_13_786.jpg "left"
+[vis-aug-3]: ./pics/right_2016_12_01_13_31_13_786.jpg "right"
+[vis-aug-4]: ./pics/cropped.png "cropped"
+[vis-aug-5]: ./pics/resized.png "resized"
+[vis-aug-6]: ./pics/flipped-1.png "flipped"
+[vis-aug-7]: ./pics/normalized-1.png "normalized-1.png"
+[vis-aug-8]: ./pics/normalized-2.png "normalized-2.png"
+
 
 # Overview
 
@@ -55,7 +64,7 @@ The model.py file contains the code for training and saving the convolution neur
 
 ## Model Architecture and Training Strategy
 
-### 1. An appropriate model architecture has been employed
+### * An appropriate model architecture has been employed
 
 I use the network architecture nvidia used for their self driving car, which added some dropouts.
 [Link here](https://devblogs.nvidia.com/parallelforall/deep-learning-self-driving-cars/)
@@ -90,14 +99,14 @@ My final model consisted of the following layers:
 
 
 
-### 2. Attempts to reduce overfitting in the model
+### * Attempts to reduce overfitting in the model
 
 1. I used 20% of training data as validation set. (``` train_test_split(samples, test_size=0.2) ``` )
 2. I added 3 dropout layers which seem to reduce the wobbling driving.
 3. I learned a technique to turned horizontally 50% of image, which fixed the car running into the sandy ground area. (```def flip_50_percent_image```)
 
 
-### 3. Model parameter tuning
+### * Model parameter tuning
 
 1. From some basic EDA I learned a great portion of training data has label steering angle 0, which might cause issues. So I tried to filter out 99% of them using ```random()``` .
 
@@ -105,8 +114,31 @@ My final model consisted of the following layers:
 
 2. I use images from all three cameras, and an "angle correction" of 0.25 .
 
-### 4. Appropriate training data
+### * Appropriate training data
 
 1. At first I tried to generate training data in simulator training mode, but my model didn't do well.
 In order to reduce changing factors I use the "default udacity dataset" instead.
 
+## Architecture and Training Documentation
+
+### * Is the creation of the training dataset and training process documented?
+As previously mentioned, I applied augmentation to the training dataset, here are examples of these augmentation:
+
+* There are images taken from 3 camera of different angles: center, left, right, I use all 3 of them.
+  Image from center camera:
+  ![vis-aug-1]
+  Image from left camera:
+  ![vis-aug-2]
+  Image from right camera:
+  ![vis-aug-3]
+* Cropping the images.
+  ![vis-aug-4]
+* Resizing the images.
+  ![vis-aug-5]
+* Flippping 50 percent of the images horizontally.
+  ![vis-aug-6]
+* Normalizing the images.
+  Resized image after normalization:
+  ![vis-aug-7]
+  Original 'center' image after normalization:
+  ![vis-aug-8]
