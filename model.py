@@ -75,8 +75,18 @@ def read_image(name, steering_angle, carmeradir):
     return image, angle
 
 # flip 50 percent of the images horizontally:
-def flip_50_percent_image(image, angle):
+def flip_50_percent_image(image, angle, force_flip = 0):
     # https://discussions.udacity.com/t/using-generator-to-implement-random-augmentations/242185/7
+    if 0 != force_flip:
+        if 1 == force_flip:
+            angle = -1 * angle
+            image = cv2.flip(image, 1)
+        elif 2 == force_flip:
+            pass
+        else:
+            pass
+        return image, angle
+
     flip_prob = np.random.random()
     if flip_prob > 0.5:
     # flip the image and reverse the steering angle
