@@ -125,20 +125,26 @@ In order to reduce changing factors I use the "default udacity dataset" instead.
 As previously mentioned, I applied augmentation to the training dataset, here are examples of these augmentation:
 
 * There are images taken from 3 camera of different angles: center, left, right, I use all 3 of them.
-  Image from center camera:
+
+  Image from center camera:<br>
   ![vis-aug-1]
-  Image from left camera:
+
+  Image from left camera:<br>
   ![vis-aug-2]
-  Image from right camera:
+
+  Image from right camera:<br>
   ![vis-aug-3]
-* Cropping the images.
+
+* Cropping the images.<br>
   ![vis-aug-4]
-* Resizing the images.
+* Resizing the images.<br>
   ![vis-aug-5]
-* Flippping 50 percent of the images horizontally.
+* Flippping 50 percent of the images horizontally.<br>
   ![vis-aug-6]
-* Normalizing the images.
-  Resized image after normalization:
+* Normalizing the images:
+
+  Resized image after normalization:<br>
   ![vis-aug-7]
-  Original 'center' image after normalization:
+  
+  Original 'center' image after normalization:<br>
   ![vis-aug-8]
