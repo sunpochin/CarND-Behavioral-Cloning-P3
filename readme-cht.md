@@ -6,7 +6,7 @@
 ----
 這個影片是 udacity 自駕車課程其中一個作業，我目前做到的錄影：
 
-[![IMAGE ALT TEXT HERE](https://img.youtube.com/vi/O4reOzBoT5M/0.jpg)](https://www.youtube.com/watch?v=O4reOzBoT5M)
+[![IMAGE ALT TEXT HERE](https://img.youtube.com/vi/O4reOzBoT5M/0.jpg)](https://www.youtube.com/watch?v=olQBTqeXK-w)
 
 它的原理是，我們要能讓我們的模擬車知道，在道路的照片長怎樣的時候該右轉，左轉，或是維持直線。
 所以
