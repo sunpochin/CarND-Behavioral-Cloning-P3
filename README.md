@@ -21,7 +21,7 @@ This is my udacity self driving car project, which tries to train a model to pre
 
 A recording of the simulation could be found here:
 
-[![IMAGE ALT TEXT HERE](https://img.youtube.com/vi/O4reOzBoT5M/0.jpg)](https://www.youtube.com/watch?v=O4reOzBoT5M)
+[![IMAGE ALT TEXT HERE](https://img.youtube.com/vi/O4reOzBoT5M/0.jpg)](https://www.youtube.com/watch?v=olQBTqeXK-w)
 
 I use default udacity training set, started with LeNet-5 architecture and the nvidia one mentioned from previous lessons, both didn't work.
 
