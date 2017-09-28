@@ -1,9 +1,10 @@
 # Behaviorial Cloning Project
+[Chinese Version](https://sunpochin.github.io/carND-Behavioral-Cloning-P3/readme-cht)
+
 
 [vis-image1]: ./pics/bins100.png "bins 100"
 [vis-image2]: ./pics/bins500.png "bins 500"
 [vis-image3]: ./pics/cnn-architecture-624x890.png "nvidia arch."
-
 
 [vis-aug-1]: ./pics/center_2016_12_01_13_31_13_786.jpg "center"
 [vis-aug-2]: ./pics/left_2016_12_01_13_31_13_786.jpg "left"
@@ -13,8 +14,6 @@
 [vis-aug-6]: ./pics/flipped-1.png "flipped"
 [vis-aug-7]: ./pics/normalized-1.png "normalized-1.png"
 [vis-aug-8]: ./pics/normalized-2.png "normalized-2.png"
-
-
 # Overview
 
 This is my udacity self driving car project, which tries to train a model to predict which "steering angle" to use according to different situations.
