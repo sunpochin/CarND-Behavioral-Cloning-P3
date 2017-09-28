@@ -1,5 +1,5 @@
 # Behaviorial Cloning Project
-[Chinese Version](https://sunpochin.github.io/carND-Behavioral-Cloning-P3/readme-cht)
+[中文版點這裡](https://sunpochin.github.io/carND-Behavioral-Cloning-P3/readme-cht)
 
 
 [vis-image1]: ./pics/bins100.png "bins 100"
